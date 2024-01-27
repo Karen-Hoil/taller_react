@@ -7,6 +7,7 @@ import CrearTrabajo from './page/crearTrabajo';
 import Detalles from './page/detalles';
 import Reparacion from './page/reparacion';
 import Revision from './page/revision';
+import './css/navar.css';
 
 function App() {
   const router = createBrowserRouter([

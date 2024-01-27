@@ -1,0 +1,42 @@
+.header_taller{
+    background-color: rgba(43, 40, 160, 1);
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+}
+.header_taller h1{
+    padding-top: 40px;
+    padding-bottom: 60px;
+    text-align: center;
+    color: white;
+    font-weight: bolder;
+}
+.header_taller img{
+    position: absolute;
+    left: 410px;
+    top: 35px;
+}
+.menu{
+    
+    display: flex;
+    justify-content:space-around;
+}
+.menu h4{
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.texto{
+    margin-left: 30px;
+    padding-bottom: 30px;
+}
+
+.texto :hover{
+    background-color: rgba(49, 158, 238, 1);
+    width: 50px;
+    background-size: 80px;
+    background-clip: border-box;
+}
+
+.texto.selccion{
+    background-color: rgba(49, 158, 238, 1);
+}
