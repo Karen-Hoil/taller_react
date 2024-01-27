@@ -4,13 +4,10 @@ export default function Footer() {
   return (
     <>
       <div
-        className="fixed bottom-0 left-0 bg-blue-800 w-60 h-60 rounded-full mx-auto"
+        className="fixed bottom-44 bg-blue-800 w-screen h-60 rounded-full"
         style={{
           position: "fixed",
-          bottom: "-120px",
-          left: "9%",
-          transform: "translateX(-50%)",
-          overflow: "visible",
+          bottom: "-120px"
         }}
       ></div>
     </>
