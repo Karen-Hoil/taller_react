@@ -16,7 +16,7 @@ export default function TableWorks({ columna, fila }) {
 
   const filaTable = (datos) => {
     return datos.map((elementos, indice) => (
-      <tr key={indice} className={indice % 2 === 0 ? "bg-gray-100 text-center" : "bg-gray-400 text-center"}>
+      <tr key={indice} className={indice % 2 === 0 ? "bg-gray-100 text-center" : "bg-gray-400  text-center"}>
         {elementos.map((elemento, subindice) => (
           <td key={subindice}>{elemento}</td>
         ))}
