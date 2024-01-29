@@ -1,0 +1,77 @@
+.container {
+  min-height: 100vh;
+  background-color: #f0f0f0; /* Cambié el color de fondo a gris */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra horizontalmente */
+}
+
+.login-header h1 {
+  color: #ffffff; /* Ajusta el color como sea necesario */
+  background-color: #0000ff; /* Ajusta el color como sea necesario */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.login-header img {
+  margin-bottom: 10px; /* Ajusta el margen inferior del icono */
+}
+
+.login-form {
+  width: 50%; /* Ajusta el ancho del formulario */
+  margin: auto; /* Centra horizontalmente */
+}
+
+.login-form label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #0000ff; /* Ajusta el color como sea necesario */
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #0000cc; /* Ajusta el color para el hover como sea necesario */
+}
+
+.register-link {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+}
+
+.register-link p {
+  margin: 0; /* Elimina el margen del párrafo para evitar espacios adicionales */
+}
+
+.register-link a {
+  color: #0000ff; /* Ajusta el color como sea necesario */
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
