@@ -1,12 +1,3 @@
-.container {
-  min-height: 100vh;
-  background-color: #f0f0f0; /* Cambié el color de fondo a gris */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 .login-header {
   display: flex;
   flex-direction: column;
@@ -43,8 +34,13 @@
   border-radius: 5px;
 }
 
+.login-button-container {
+  width: 50%; /* Ancho igual al del formulario */
+  margin: auto; /* Centra horizontalmente */
+}
+
 .login-button {
-  width: 100%;
+  width: 100%; /* Ancho igual al del contenedor del encabezado */
   padding: 10px;
   border: none;
   background-color: #0000ff; /* Ajusta el color como sea necesario */
