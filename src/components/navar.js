@@ -24,13 +24,13 @@ function Header() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <h4>Inicio</h4>
+            <a href="/inicio">Inicio</a>
           </div>
 
-          <h4>Agregar trabajo</h4>
-          <h4>Reparación</h4>
-          <h4>Revisión</h4>
-          <h4>Cerra sesión</h4>
+          <a href="/crear">Agregar trabajo</a>
+          <a href="/reparacion">Reparación</a>
+          <a href="/revision">Revisión</a>
+          <a href="/">Cerra sesión</a>
         </div>
       </div>
     </>
