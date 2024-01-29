@@ -3,7 +3,7 @@ import Header from "../components/navar";
 
 function Detalles() {
   return (
-    <div className="bg-gray-200">
+    <div className="bg-gray-200 overflow-y-auto">
       <Header />
       <h2 className="text-center mt-4">Detalles del trabajo</h2>
       <div className="flex ml-[10%] mt-5">
