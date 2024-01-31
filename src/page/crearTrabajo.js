@@ -32,6 +32,20 @@ function CrearTrabajo () {
                 className="form-input"
               />
             </div>
+            <div className="flex-1  max-w-100 rounded mr-14">
+            <p>Tipo de trabajo:</p>
+        <select className="bg-[#2c28a0] text-white w-full rounded font-bold">
+  <option value="todo" className="text-white text-center pt-1">
+    Reparación de chapa y pintura
+  </option>
+  <option value="en-proceso" className="text-white text-center pt-1">
+    Reparación mecanica
+  </option>
+  <option value="terminado" className="text-white text-center pt-1">
+    Revisión
+  </option>
+</select>
+</div>
             <div className="form-group">
               <button type="submit" className="submit-button">
                 Agregar trabajo

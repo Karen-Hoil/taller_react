@@ -1,7 +1,16 @@
-import React from "react";
+import { useState } from "react";
 import Header from "../components/navar";
 
 function Detalles() {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
   return (
     <div className="bg-gray-200 overflow-y-auto">
       <Header />
@@ -25,7 +34,7 @@ function Detalles() {
               </p>
             </div>
             <div className="flex flex-col ml-[20%]">
-              <h4>Total:</h4>
+              <h4>Total material:</h4>
               <p className="border-gray-300 border-2 rounded px-2 shadow-md">
                 1200
               </p>
@@ -39,8 +48,75 @@ function Detalles() {
           </p>
         </div>
       </div>
+      {modalOpen && (
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
+          <div className="bg-white p-8 rounded shadow-md">
+            <h2 className="text-center mb-4">Editar trabajo</h2>
+            <label htmlFor="name">Nombre del trabajo:</label>
+              <input
+                id="name"
+                name="name"
+                placeholder="Reparación chapa pintura"
+                type="text"
+                required=""
+                className="form-input"
+              />
+              <label htmlFor="username">Descripción:</label>
+              <input
+                id="username"
+                name="username"
+                placeholder="Para la reparación es necesario..."
+                type="text"
+                required=""
+                className="form-input"
+              />
+              <label htmlFor="username">Horas:</label>
+              <input
+                id="username"
+                name="username"
+                placeholder="¿Cuantas horas trabajaste?"
+                type="text"
+                required=""
+                className="form-input w-30"
+              />
+              <label htmlFor="username">Precio total de materiales:</label>
+              <input
+                id="username"
+                name="username"
+                placeholder="¿Cuanto se gasto?"
+                type="number"
+                required=""
+                className="form-input w-30"
+              />
+              <label htmlFor="username">Materiales:</label>
+              <input
+                id="username"
+                name="username"
+                placeholder="Agrega el material que se utilizo"
+                type="text"
+                required=""
+                className="form-input w-30"
+              />
+           <button
+  onClick={closeModal}
+  className="bg-[#696969] text-white px-4 py-1 rounded w-30 mr-2 mt-4"
+>
+  <b>Cerrar</b>
+</button>
+<button
+  onClick={closeModal}
+  className="bg-[#56AA5F] text-white px-4 py-1 rounded w-30 ml-2 mt-4"
+>
+  <b>Actualizar</b>
+</button>
+          </div>
+        </div>
+      )}
       <div className="mt-[7%] mb-10 ml-[43%]">
-        <button className="bg-blue-800 text-white px-4 py-1 rounded w-44">
+        <button
+          onClick={openModal}
+          className="bg-blue-800 text-white px-4 py-1 rounded w-44"
+        >
           <b>Editar trabajo</b>
         </button>
       </div>
