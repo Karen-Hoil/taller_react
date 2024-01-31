@@ -1,23 +1,32 @@
+.login-container{
+  margin-top: 60px;
+}
 .login-header {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra horizontalmente */
+  align-items: center; 
 }
 
 .login-header h1 {
-  color: #ffffff; /* Ajusta el color como sea necesario */
-  background-color: #0000ff; /* Ajusta el color como sea necesario */
+  color: #ffffff; 
+  background-color: rgba(43, 40, 160, 1); 
   padding: 10px;
   border-radius: 5px;
+  width: 50%;
+  height: 110px;
+  border-radius: 30px;
+  text-align: center;
 }
 
 .login-header img {
-  margin-bottom: 10px; /* Ajusta el margen inferior del icono */
+  position: absolute;
+  top: 140px;
 }
 
 .login-form {
-  width: 50%; /* Ajusta el ancho del formulario */
-  margin: auto; /* Centra horizontalmente */
+  width: 50%; 
+  margin-top: 50px; 
+  margin-left: 25%;
 }
 
 .login-form label {
@@ -35,36 +44,36 @@
 }
 
 .login-button-container {
-  width: 50%; /* Ancho igual al del formulario */
-  margin: auto; /* Centra horizontalmente */
+  width: 50%; 
+  margin: auto; 
 }
 
 .login-button {
-  width: 100%; /* Ancho igual al del contenedor del encabezado */
+  width: 100%; 
   padding: 10px;
   border: none;
-  background-color: #0000ff; /* Ajusta el color como sea necesario */
+  background-color: rgba(43, 40, 160, 1); 
   color: white;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .login-button:hover {
-  background-color: #0000cc; /* Ajusta el color para el hover como sea necesario */
+  background-color: rgba(43, 40, 160, 1); 
 }
 
 .register-link {
   margin-top: 20px;
   display: flex;
-  justify-content: center; /* Centra horizontalmente */
+  justify-content: center; 
 }
 
 .register-link p {
-  margin: 0; /* Elimina el margen del párrafo para evitar espacios adicionales */
+  margin: 0; 
 }
 
 .register-link a {
-  color: #0000ff; /* Ajusta el color como sea necesario */
+  color: rgba(43, 40, 160, 1); 
   text-decoration: none;
 }
 

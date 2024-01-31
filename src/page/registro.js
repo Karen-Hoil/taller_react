@@ -1,14 +1,17 @@
-// Registro.js
 import React from "react";
-import Regheader from "../components/prenavbar";
+import icono_herramienta from "../img/icono_herramienta.png";
 import "../css/registro.css";
 
 function Registro() {
   return (
     <>
-      <Regheader />
+    <div className="login-container">
+      <div className="login-header">
+        <h1>Taller dashboard</h1>
+        <img src={icono_herramienta} alt="..." />
+      </div>
       <div className="container">
-        <h2>Crea una nueva cuenta</h2>
+        <h2 style={{marginTop:'25px'}}>Crea una nueva cuenta</h2>
         <div className="form-container">
           <form method="POST" action="#">
             <div className="form-group">
@@ -24,7 +27,7 @@ function Registro() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="username">Nombre de usuario</label>
+              <label htmlFor="username">Apellido</label>
               <input
                 id="username"
                 name="username"
@@ -70,17 +73,20 @@ function Registro() {
             </div>
 
             <div className="form-group">
+              <a href="/">
               <button type="submit" className="submit-button">
                 Crear cuenta
               </button>
+              </a>
             </div>
           </form>
 
           <p className="login-link">
             ¿Ya tienes cuenta registrada?{" "}
-            <a href="/inicio">Inicia sesión con tu cuenta</a>
+            <a href="/">Inicia sesión con tu cuenta</a>
           </p>
         </div>
+      </div>
       </div>
     </>
   );

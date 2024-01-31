@@ -1,19 +1,46 @@
 // App.js
-import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Login from './components/Login';
 import './App.css';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Inicio from './page/inicio';
+import Login from './page/login';
+import Registro from './page/registro';
+import CrearTrabajo from './page/crearTrabajo';
+import Detalles from './page/detalles';
+import Reparacion from './page/reparacion';
+import Revision from './page/revision';
+import './css/navar.css';
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/", // Ruta para el login
-      element: <Login />,
+      path:"/",
+      element: <Login/>
     },
     {
-     
+      path: "/registro",
+      element: <Registro/>
     },
-    // Agrega aquí más rutas según sea necesario
+    {
+      path: "/inicio",
+      element: <Inicio/>
+    },
+    {
+      path: "/crear",
+      element: <CrearTrabajo/>
+    },
+    {
+      path: "/detalles",
+      element: <Detalles/>
+    },
+    {
+      path: "/reparacion",
+      element: <Reparacion/>
+    },
+    {
+      path: "/revision",
+      element: <Revision/>
+    }
+    
   ]);
 
   return (

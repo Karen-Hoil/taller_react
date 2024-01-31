@@ -25,7 +25,7 @@ function Inicio () {
            <Header/>
            <h2 className="text-center mt-3">Tus trabajos son...</h2>
       <div className="flex mt-3 ml-[30%] mb-5">
-        <div className="flex-1 bg-purple-500 rounded p-1 mr-[20%] flex items-center">
+        <div className="flex-1 bg-[#2c28a075] rounded p-1 mr-[20%] flex items-center">
           <img src={Buscar} alt="..." className="w-8 h-6 ml-3" />
           <input className="ml-2 outline-none border-none bg-purple-500 text-white" />
         </div>
