@@ -21,13 +21,13 @@ function Reparacion() {
   ];
 
   return (
-    <>
+    <div className="bg-gray-200 h-screen">
       <Header />
-      <h2 className="text-center mt-3">Reparación</h2>
+      <h2 className="text-center mt-4">Reparación</h2>
       <div className="flex mt-3 ml-[30%] mb-5">
         <div className="flex-1 bg-purple-500 rounded p-1 mr-[20%] flex items-center">
           <img src={Buscar} alt="..." className="w-8 h-6 ml-3" />
-          <input className="ml-2 outline-none border-none bg-purple-500 text-white" />
+          <input className="ml-2 outline-none border-none bg-purple-500 text-white w-[89%]" />
         </div>
         <div className="flex-1 bg-purple-500 max-w-32 rounded mr-14">
           <selectc className="bg-purple-500">
@@ -38,7 +38,7 @@ function Reparacion() {
         </div>
       </div>
       <TableWorks columna={columnaData} fila={prueba} />
-    </>
+    </div>
   );
 }
 export default Reparacion;
