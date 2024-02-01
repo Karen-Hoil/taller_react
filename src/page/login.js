@@ -6,6 +6,11 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const isAlphanumeric = (str) => /^[a-zA-Z0-9]+$/.test(str);
+  
+  const isSafeInput = (input) => {
+    // Evitar inyección SQL básica
+    return !input.includes("'") && !input.includes('"') && !input.includes(';');
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
