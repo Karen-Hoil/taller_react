@@ -29,7 +29,7 @@ function App() {
       element: <CrearTrabajo/>
     },
     {
-      path: "/detalles",
+      path: "/detalles/:id_trabajo",
       element: <Detalles/>
     },
     {

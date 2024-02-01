@@ -21,15 +21,6 @@ function Revision() {
     fetchData();
   }, []);
 
-  const columnaData = [
-    "Nombre",
-    "Descripción",
-    "Trabajo",
-    "Horas",
-    "Acción",
-    "Empezo"
-  ];
-
   return (
     <>
       <Header />
@@ -53,17 +44,7 @@ function Revision() {
           </select>
         </div>
       </div>
-      <TableWorks
-        columna={columnaData}
-        fila={trabajos.map((trabajo) => [
-          trabajo.nombre,
-          trabajo.descripcion,
-          trabajo.tipo,
-          trabajo.horas,
-          trabajo.estatus.data[0] === 0 ? "En proceso" : "Terminado",
-          trabajo.fecha_creacion,
-        ])}
-      />
+      <TableWorks/>
     </>
   );
 }

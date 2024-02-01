@@ -1,6 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from 'react-router-dom';
 
-export default function TableWorks({ columna, fila }) {
+export default function TableWorks() {
+  const [trabajos, setTrabajos] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8082/trabajos");
+        console.log("Datos obtenidos:", response.data);
+        setTrabajos(response.data);
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const columnaData = [
+    "Nombre",
+    "Descripción",
+    "Trabajo",
+    "Horas",
+    "Acción",
+    "Empezo",
+    "Opciones",
+  ];
+
   const columnaTable = (titulos) => {
     return (
       <>
@@ -15,16 +43,18 @@ export default function TableWorks({ columna, fila }) {
   };
 
   const filaTable = (datos) => {
+    console.log("Datos en filaTable:", datos);
     return datos.map((elementos, indice) => (
-
       <tr key={indice} className={indice % 2 === 0 ? "bg-gray-100 text-center" : "bg-[#D9D9D9]  text-center"}>
-
-
-
-        {elementos.map((elemento, subindice) => (
-          <td key={subindice}>{elemento}</td>
-        ))}
-        <td colSpan={elementos.length}></td>
+        <td>{elementos.nombre}</td>
+        <td>{elementos.descripcion}</td>
+        <td>{elementos.tipo}</td>
+        <td>{elementos.horas}</td>
+        <td>{elementos.estatus.data[0] === 0 ? "En proceso" : "Terminado"}</td>
+        <td>{elementos.fecha_creacion}</td>
+        <td colSpan={Object.keys(elementos).length}>
+          <Link to={`/detalles/${elementos.id_trabajo}`}>Ver Detalles</Link>
+        </td>
       </tr>
     ));
   };
@@ -34,9 +64,9 @@ export default function TableWorks({ columna, fila }) {
       <div className="rounded overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="mx-5">{columnaTable(columna)}</tr>
+            <tr className="mx-5">{columnaTable(columnaData)}</tr>
           </thead>
-          <tbody>{filaTable(fila)}</tbody>
+          <tbody>{filaTable(trabajos)}</tbody>
         </table>
       </div>
     </div>
