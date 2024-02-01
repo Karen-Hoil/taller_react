@@ -19,7 +19,7 @@ function Registro() {
               <input
                 id="name"
                 name="name"
-                placeholder="Roark Rickaby"
+                placeholder="Roark"
                 type="text"
                 required=""
                 className="form-input"
@@ -31,7 +31,7 @@ function Registro() {
               <input
                 id="username"
                 name="username"
-                placeholder="Rock_27"
+                placeholder="Rickaby"
                 type="text"
                 required=""
                 className="form-input"
@@ -67,6 +67,18 @@ function Registro() {
                 id="password_confirmation"
                 name="password_confirmation"
                 type="password"
+                required=""
+                className="form-input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="username">Elige una pregunta de </label>
+              <input
+                id="username"
+                name="username"
+                placeholder="Rock_27"
+                type="text"
                 required=""
                 className="form-input"
               />
