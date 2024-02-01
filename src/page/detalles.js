@@ -13,8 +13,16 @@ function Detalles() {
   const [costo, setCosto] = useState("");
   const [material, setMaterial] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) =>{
+    
     e.preventDefault();
+    
+    if (!nombre.trim() || !descripcion.trim() || !horas.trim() || !costo.trim() || !material.trim()) {
+      alert("Por favor, complete todos los campos.");
+      return;
+    }
+  
+    
 
     const trabajoData = {
       nombre: nombre,
@@ -27,6 +35,8 @@ function Detalles() {
       precio: costo,
       id: id_trabajo,
     };
+
+    
 
     try {
       const responseTrabajo = await axios.put(
@@ -53,6 +63,7 @@ function Detalles() {
         error.response.data
       );
     }
+    
   };
 
   const [modalOpen, setModalOpen] = useState(false);

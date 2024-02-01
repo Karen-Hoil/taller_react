@@ -6,6 +6,8 @@ import Buscar from "../img/icono_buscar.png";
 
 function Revision() {
   const [trabajos, setTrabajos] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("todo");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +23,21 @@ function Revision() {
     fetchData();
   }, []);
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleStatusFilterChange = (event) => {
+    setStatusFilter(event.target.value);
+  };
+
+  const filteredTrabajos = trabajos.filter((trabajo) => {
+    const matchesDescription = trabajo.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "todo" || trabajo.estado.toLowerCase() === statusFilter.toLowerCase();
+
+    return matchesDescription && matchesStatus;
+  });
+
   return (
     <>
       <Header />
@@ -28,10 +45,19 @@ function Revision() {
       <div className="flex mt-3 ml-[30%] mb-5">
         <div className="flex-1 bg-[#2c28a075] rounded p-1 mr-[20%] flex items-center">
           <img src={Buscar} alt="..." className="w-8 h-6 ml-3" />
-          <input className="ml-2 outline-none border-none bg-[#2c28a011] text-white w-full" />
+          <input
+            className="ml-2 outline-none border-none bg-[#2c28a011] text-white w-full"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Buscar por descripción"
+          />
         </div>
         <div className="flex-1  max-w-32 rounded mr-14">
-          <select className="bg-[#2c28a075] text-white w-full rounded font-bold">
+          <select
+            className="bg-[#2c28a075] text-white w-full rounded font-bold"
+            value={statusFilter}
+            onChange={handleStatusFilterChange}
+          >
             <option value="todo" className="text-white text-center pt-1">
               Todo
             </option>
@@ -44,7 +70,7 @@ function Revision() {
           </select>
         </div>
       </div>
-      <TableWorks/>
+      <TableWorks trabajos={filteredTrabajos} />
     </>
   );
 }

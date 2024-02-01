@@ -1,4 +1,4 @@
-import React from "react";
+import {useState} from "react";
 import Header from "../components/navar";
 import TableWorks from "../components/TableWorks";
 import Buscar from "../img/icono_buscar.png";
@@ -52,6 +52,19 @@ function Reparacion() {
       "Detalles",
     ],
   ];
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState(prueba);
+
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    const filteredResults = prueba.filter((row) =>
+      row[1].toLowerCase().includes(term.toLowerCase())
+    );
+
+    setFilteredData(filteredResults);
+  };
 
   return (
     <div className="bg-gray-200 h-screen">
