@@ -1,23 +1,78 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Header from "../components/navar";
+import Modal from "react-modal";
 
-function CrearTrabajo () {
-    return(
-        <>
-        <Header/>
-        <div className="container_crear">
+function CrearTrabajo() {
+  const [showModal, setShowModal] = useState(false);
+  const [nombre, setNombre] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [tipoTrabajo, setTipoTrabajo] = useState([]);
+  const [selectedTipoTrabajo, setSelectedTipoTrabajo] = useState("");
+
+  Modal.setAppElement("#root");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (!nombre || !descripcion || !selectedTipoTrabajo) {
+      setShowModal(true);
+      return;
+    }
+  
+    const formData = {
+      nombre: nombre,
+      descripcion: descripcion,
+      trabajo: selectedTipoTrabajo,
+    };
+  
+    try {
+      const response = await axios.post("http://localhost:8082/trabajos", formData);
+      console.log("Respuesta del servidor:", response.data);
+      setShowModal(false);
+      setNombre("")
+      setDescripcion("")
+      setSelectedTipoTrabajo("")
+      alert("Se registro el trabajo con exito")
+    } catch (error) {
+      console.error("Error al realizar la solicitud POST:", error.response.data);
+    }
+  };  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8082/tipoTrabajo");
+        console.log("Datos obtenidos:", response.data);
+        setTipoTrabajo(response.data);
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <>
+      <Header />
+      <div className="container_crear">
         <h2 className="text-center mt-3">Agregar trabajo</h2>
         <div className="form-container_crear">
-          <form method="POST" action="#" >
-            <div className="form-group" >
+          <form method="POST">
+            <div className="form-group">
               <label htmlFor="name">Nombre del trabajo:</label>
               <input
                 id="name"
                 name="name"
-                placeholder="Reparación chapa pintura"
+                placeholder="Nombre del trabajo"
                 type="text"
                 required=""
+                value={nombre}
                 className="form-input"
+                onChange={(e) => {
+                  setNombre(e.target.value);
+                }}
               />
             </div>
 
@@ -26,36 +81,59 @@ function CrearTrabajo () {
               <input
                 id="username"
                 name="username"
-                placeholder="Para la reparación es necesario..."
+                placeholder="Descripción"
                 type="text"
                 required=""
+                value={descripcion}
                 className="form-input"
+                onChange={(e) => {
+                  setDescripcion(e.target.value);
+                }}
               />
             </div>
             <div className="flex-1  max-w-100 rounded mr-14">
-            <p>Tipo de trabajo:</p>
-        <select className="bg-[#2c28a0] text-white w-full rounded font-bold">
-  <option value="todo" className="text-white text-center pt-1">
-    Reparación de chapa y pintura
-  </option>
-  <option value="en-proceso" className="text-white text-center pt-1">
-    Reparación mecanica
-  </option>
-  <option value="terminado" className="text-white text-center pt-1">
-    Revisión
-  </option>
-</select>
-</div>
+              <p>Tipo de trabajo:</p>
+              <select
+                className="bg-[#2c28a0] text-white w-full rounded font-bold"
+                value={selectedTipoTrabajo}
+                onChange={(e) => {
+                  setSelectedTipoTrabajo(e.target.value);
+                }}
+              >
+                {tipoTrabajo.map((tipoT) => (
+                  <option
+                    key={tipoT.id_tipo_trabajo}
+                    value={tipoT.id_tipo_trabajo}
+                    className="text-white text-center pt-1"
+                  >
+                    {tipoT.tipo}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="form-group">
-              <button type="submit" className="submit-button">
+              <button
+                type="submit"
+                className="submit-button"
+                onClick={handleSubmit}
+              >
                 Agregar trabajo
               </button>
             </div>
           </form>
-
+          <Modal
+            isOpen={showModal}
+            onRequestClose={() => setShowModal(false)}
+            contentLabel="Alerta"
+          >
+            <h2>Campos Incompletos</h2>
+            <p>Por favor, completa todos los campos del formulario.</p>
+            <button onClick={() => setShowModal(false)}>Cerrar</button>
+          </Modal>
         </div>
-        </div>
-        </>
-    )
+      </div>
+    </>
+  );
 }
-export default CrearTrabajo
+
+export default CrearTrabajo;
