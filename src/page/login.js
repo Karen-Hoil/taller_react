@@ -3,6 +3,7 @@ import axios from "axios";
 import '../css/login.css'; 
 import icono_herramienta from "../img/icono_herramienta.png";
 
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,12 +11,14 @@ const Login = () => {
   const isValidPassword = (inputPassword) => {
     const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
     return regex.test(inputPassword);
-  };
+  }
+  const isAlphanumeric = (str) => /^[a-zA-Z0-9]+$/.test(str);
+
 
   const login = async (e) => {
     e.preventDefault();
 
-   
+
     if (email.trim() === "" || password.trim() === "") {
       alert("Por favor, completa todos los campos.");
       return;
@@ -24,6 +27,12 @@ const Login = () => {
     
     if (!isValidPassword(password)) {
       alert("La contraseña no debe contener caracteres especiales ni la letra 'ñ'.");
+    if (!email.trim() || !password.trim()) {
+      alert('Por favor, completa todos los campos');
+      return;
+    }
+    if ( !isAlphanumeric(password)) {
+      alert('Los campos solo pueden contener letras y números');
       return;
     }
 
@@ -54,6 +63,8 @@ const Login = () => {
         <label htmlFor="password">Contraseña:</label>
         <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
+
+
         <button type="submit" className="login-button">Iniciar sesión</button>
       </form>
       <div className="register-link">
@@ -62,5 +73,6 @@ const Login = () => {
     </div>
   );
 };
+}
 
 export default Login;

@@ -57,6 +57,7 @@ function Detalles() {
       setHoras("");
       setCosto("");
       setMaterial("");
+      window.location.reload();
     } catch (error) {
       console.error(
         "Error al realizar la solicitud POST:",
