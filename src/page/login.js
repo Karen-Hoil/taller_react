@@ -3,6 +3,7 @@ import axios from "axios";
 import '../css/login.css'; 
 import icono_herramienta from "../img/icono_herramienta.png";
 
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,6 +41,7 @@ const Login = () => {
         <label htmlFor="password">Contraseña:</label>
         <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
+        <button type="submit" className="login-button">Iniciar sesión</button>
         <button type="submit" className="login-button">Iniciar sesión</button>
       </form>
       <div className="register-link">
