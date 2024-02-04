@@ -30,7 +30,7 @@ function Header() {
           <a href="/crear">Agregar trabajo</a>
           <a href="/reparacion">Reparación</a>
           <a href="/revision">Revisión</a>
-          <a href="/">Cerra sesión</a>
+          <a href="/">Cerrar sesión</a>
         </div>
       </div>
     </>

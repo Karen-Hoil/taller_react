@@ -1,166 +1,112 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import axios from "axios";
+import '../css/login.css'; 
 import icono_herramienta from "../img/icono_herramienta.png";
-import "../css/registro.css";
-import Modal from "react-modal";
 
-function Registro() {
-  const [showModal, setShowModal] = useState(false);
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [correo, setCorreo] = useState("");
-  const [contraseña, setContraseña] = useState("");
-  const [confirm, setConfirm] = useState("");
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
-  Modal.setAppElement("#root");
+  const isValidPassword = (inputPassword) => {
+    const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
+    return regex.test(inputPassword);
+  };
 
-  const handleSubmit = async (e) => {
+  const hasConsecutiveNumbers = (inputPassword) => {
+    const consecutiveNumbersRegex = /\d{2,}/;
+    return !consecutiveNumbersRegex.test(inputPassword);
+  };
+
+  const isUsernameValid = (inputUsername) => {
+    const forbiddenUsernames = ["admin", "root"];
+    return !forbiddenUsernames.includes(inputUsername.toLowerCase());
+  };
+
+  const login = async (e) => {
     e.preventDefault();
 
-    if (!nombre || !apellido || !correo || !contraseña || contraseña !== confirm) {
-      setShowModal(true);
+    // Verificar campos vacíos
+    if (email.trim() === "" || password.trim() === "" || confirmPassword.trim() === "" || username.trim() === "") {
+      alert("Por favor, completa todos los campos.");
       return;
-    }    
+    }
 
-    const formData = {
-      nombre: nombre + "" + apellido,
-      correo: correo,
-      contraseña: contraseña,
-    };
+    // Validar longitud de contraseña
+    if (password.length < 6) {
+      setPasswordErrorMessage("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8082/mecanicos",
-        formData
-      );
-      console.log("Respuesta del servidor:", response.data);
-      setShowModal(false);
-      setNombre("");
-      setApellido("");
-      setCorreo("");
-      setContraseña("");
-      setConfirm("");
-      alert("Cuenta creada con exito, puede iniciar sesion");
-      window.location.href = "/";
-    } catch (error) {
-      console.error(
-        "Error al realizar la solicitud POST:",
-        error.response.data
-      );
+    // Validar contraseña
+    if (!isValidPassword(password)) {
+      setPasswordErrorMessage("La contraseña no debe contener caracteres especiales ni la letra 'ñ'.");
+      return;
+    }
+
+    // Validar números consecutivos
+    if (!hasConsecutiveNumbers(password)) {
+      setPasswordErrorMessage("La contraseña no puede contener números consecutivos.");
+      return;
+    }
+
+    // Verificar coincidencia de contraseñas
+    if (password !== confirmPassword) {
+      setPasswordErrorMessage("Las contraseñas no coinciden.");
+      return;
+    }
+
+    // Validar nombre de usuario
+    if (!isUsernameValid(username)) {
+      setPasswordErrorMessage("Nombre de usuario no permitido. Por favor, elige otro nombre.");
+      return;
+    }
+
+    const response = await axios.post("http://localhost:8082/mecanicos", {
+      nombre: username,
+      correo: email,
+      contraseña: password,
+    });
+
+    if (response.status) {
+      window.location.href = "/inicio";
+    } else {
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setUsername("");
+      setPasswordErrorMessage("Prueba con otro correo, contraseña o nombre de usuario");
     }
   };
 
   return (
-    <>
-      <div className="login-container">
-        <div className="login-header">
-          <h1>Taller dashboard</h1>
-          <img src={icono_herramienta} alt="..." />
-        </div>
-        <div className="container">
-          <h2 style={{ marginTop: "25px" }}>Crea una nueva cuenta</h2>
-          <div className="form-container">
-            <form method="POST">
-              <div className="form-group">
-                <label htmlFor="name">Nombre</label>
-                <input
-                  id="name"
-                  name="name"
-                  placeholder="name"
-                  type="text"
-                  required=""
-                  value={nombre}
-                  className="form-input"
-                  onChange={(e) =>setNombre(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="username">Apellido</label>
-                <input
-                  id="username"
-                  name="username"
-                  placeholder="username"
-                  type="text"
-                  required=""
-                  value={apellido}
-                  className="form-input"
-                  onChange={(e) =>setApellido(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="email">Correo electrónico</label>
-                <input
-                  id="email"
-                  name="email"
-                  placeholder="email@ejemplo.com"
-                  type="email"
-                  required=""
-                  value={correo}
-                  className="form-input"
-                  onChange={(e) =>setCorreo(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password">Contraseña</label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required=""
-                  value={contraseña}
-                  className="form-input"
-                  onChange={(e) =>setContraseña(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password_confirmation">
-                  Confirma tu contraseña
-                </label>
-                <input
-                  id="password_confirmation"
-                  name="password_confirmation"
-                  type="password"
-                  required=""
-                  value={confirm}
-                  className="form-input"
-                  onChange={(e) =>setConfirm(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <a href="/">
-                  <button
-                    type="submit"
-                    className="submit-button"
-                    onClick={handleSubmit}
-                  >
-                    Crear cuenta
-                  </button>
-                </a>
-              </div>
-            </form>
-            <Modal
-              isOpen={showModal}
-              onRequestClose={() => setShowModal(false)}
-              contentLabel="Alerta"
-            >
-              <h2>Error en formulario</h2>
-              <p>Completa todos los campos del formulario o asegurate de que tus contraseñas coincidan</p>
-              <button onClick={() => setShowModal(false)}>Cerrar</button>
-            </Modal>
-            <p className="login-link">
-              ¿Ya tienes cuenta registrada?{" "}
-              <a href="/">Inicia sesión con tu cuenta</a>
-            </p>
-          </div>
-        </div>
+    <div className="login-container">
+      <div className="login-header">
+        <h1>Taller dashboard</h1>
+        <img src={icono_herramienta} alt="..." />
       </div>
-    </>
-  );
-}
+      <form className="login-form" onSubmit={login}>
+        <label htmlFor="email">Correo:</label>
+        <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
-export default Registro;
+        <label htmlFor="username">Nombre de Usuario:</label>
+        <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+
+        <label htmlFor="password">Contraseña:</label>
+        <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+        <label htmlFor="confirmPassword">Confirmar Contraseña:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+        {passwordErrorMessage && <p className="error-message">{passwordErrorMessage}</p>}
+        <button type="submit" className="login-button">Registrate</button>
+      </form>
+      <div className="register-link">
+        <p className="pb-10">¿Ya tiene cuenta? <a href="/">Logueate</a></p> 
+      </div>
+    </div>
+  );
+};
+
+export default Login;
