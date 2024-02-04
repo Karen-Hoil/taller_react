@@ -33,7 +33,7 @@ export default function TableWorks() {
     return (
       <>
         {titulos.map((titulo, index) => (
-          <th key={index} className="bg-blue-800 text-white p-1 text-center ">
+          <th key={index} className="bg-blue-800 text-white p-1 text-center">
             {titulo}
           </th>
         ))}
@@ -61,7 +61,7 @@ export default function TableWorks() {
 
   return (
     <div className="mx-8">
-      <div className="rounded overflow-hidden">
+      <div className="rounded overflow-hidden overflow-y-auto h-48">
         <table className="w-full">
           <thead>
             <tr className="mx-5">{columnaTable(columnaData)}</tr>
