@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
 
-export default function TableWorks() {
+export default function TableWorks({ filtroEstado }) {
   const [trabajos, setTrabajos] = useState([]);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function TableWorks() {
     return (
       <>
         {titulos.map((titulo, index) => (
-          <th key={index} className="bg-blue-800 text-white p-1 text-center ">
+          <th key={index} className="bg-blue-800 text-white p-1 text-center">
             {titulo}
           </th>
         ))}
@@ -44,7 +44,11 @@ export default function TableWorks() {
 
   const filaTable = (datos) => {
     console.log("Datos en filaTable:", datos);
-    return datos.map((elementos, indice) => (
+    const trabajosFiltrados = filtroEstado === "todo"
+      ? trabajos
+      : trabajos.filter(trabajo => trabajo.estatus.data[0] === (filtroEstado === "en-proceso" ? 0 : 1));
+
+    return trabajosFiltrados.map((elementos, indice) => (
       <tr key={indice} className={indice % 2 === 0 ? "bg-gray-100 text-center" : "bg-[#D9D9D9]  text-center"}>
         <td>{elementos.nombre}</td>
         <td>{elementos.descripcion}</td>
@@ -61,7 +65,7 @@ export default function TableWorks() {
 
   return (
     <div className="mx-8">
-      <div className="rounded overflow-hidden">
+      <div className="rounded overflow-hidden overflow-y-auto h-48">
         <table className="w-full">
           <thead>
             <tr className="mx-5">{columnaTable(columnaData)}</tr>

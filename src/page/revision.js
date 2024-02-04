@@ -2,41 +2,13 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/navar";
 import TableWorks from "../components/TableWorks";
 import Buscar from "../img/icono_buscar.png";
-import axios from "axios";
 
 function Revision() {
-  const [trabajos, setTrabajos] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("todo");
+  const [filtroEstado, setFiltroEstado] = useState("todo");
 
-  useEffect(() => {
-  const fetchData = async () => {
-   try {
-         const response = await axios.get("http://localhost:8082/trabajos");
-         console.log("Datos obtenidos:", response.data);
-         setTrabajos(response.data);
-       } catch (error) {
-         console.error("Error al obtener datos:", error);
-       }
-     };
-
-    fetchData();
-   }, []);
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+  const handleSelectChange = (e) => {
+    setFiltroEstado(e.target.value);
   };
-
-  const handleStatusFilterChange = (event) => {
-    setStatusFilter(event.target.value);
-  };
-
-  const filteredTrabajos = trabajos.filter((trabajo) => {
-    const matchesDescription = trabajo.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "todo" || trabajo.estado.toLowerCase() === statusFilter.toLowerCase();
-
-    return matchesDescription && matchesStatus;
-  });
 
   return (
     <>
@@ -45,18 +17,13 @@ function Revision() {
       <div className="flex mt-3 ml-[30%] mb-5">
         <div className="flex-1 bg-[#2c28a075] rounded p-1 mr-[20%] flex items-center">
           <img src={Buscar} alt="..." className="w-8 h-6 ml-3" />
-          <input
-            className="ml-2 outline-none border-none bg-[#2c28a011] text-white w-full"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="Buscar por descripción"
-          />
+          <input className="ml-2 outline-none border-none bg-[#2c28a011] text-white w-full" />
         </div>
         <div className="flex-1  max-w-32 rounded mr-14">
           <select
             className="bg-[#2c28a075] text-white w-full rounded font-bold"
-            value={statusFilter}
-            onChange={handleStatusFilterChange}
+            value={filtroEstado}
+            onChange={handleSelectChange}
           >
             <option value="todo" className="text-white text-center pt-1">
               Todo
@@ -70,7 +37,7 @@ function Revision() {
           </select>
         </div>
       </div>
-      <TableWorks trabajos={filteredTrabajos} />
+      <TableWorks filtroEstado={filtroEstado} />
     </>
   );
 }

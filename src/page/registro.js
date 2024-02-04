@@ -64,13 +64,13 @@ const Login = () => {
       return;
     }
 
-    const response = await axios.post("http://localhost:8082/login", {
+    const response = await axios.post("http://localhost:8082/mecanicos", {
+      nombre: username,
       correo: email,
       contraseña: password,
-      usuario: username,
     });
 
-    if (response.data.status) {
+    if (response.status) {
       window.location.href = "/inicio";
     } else {
       setEmail("");
@@ -100,11 +100,10 @@ const Login = () => {
         <label htmlFor="confirmPassword">Confirmar Contraseña:</label>
         <input type="password" id="confirmPassword" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         {passwordErrorMessage && <p className="error-message">{passwordErrorMessage}</p>}
-
-        <button type="submit" className="login-button">Iniciar sesión</button>
+        <button type="submit" className="login-button">Registrate</button>
       </form>
       <div className="register-link">
-        <p>¿Eres nuevo? <a href="/registro">Regístrate</a></p> 
+        <p className="pb-10">¿Ya tiene cuenta? <a href="/">Inicia sesión</a></p> 
       </div>
     </div>
   );
