@@ -1,4 +1,4 @@
-// App.js
+
 import './App.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Inicio from './page/inicio';

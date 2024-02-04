@@ -2,25 +2,26 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/navar";
 import TableWorks from "../components/TableWorks";
 import Buscar from "../img/icono_buscar.png";
+import axios from "axios";
 
 function Revision() {
   const [trabajos, setTrabajos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("todo");
-  // const [trabajos, setTrabajos] = useState([]);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:8082/trabajos");
-  //       console.log("Datos obtenidos:", response.data);
-  //       setTrabajos(response.data);
-  //     } catch (error) {
-  //       console.error("Error al obtener datos:", error);
-  //     }
-  //   };
 
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+  const fetchData = async () => {
+   try {
+         const response = await axios.get("http://localhost:8082/trabajos");
+         console.log("Datos obtenidos:", response.data);
+         setTrabajos(response.data);
+       } catch (error) {
+         console.error("Error al obtener datos:", error);
+       }
+     };
+
+    fetchData();
+   }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);

@@ -9,7 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const isValidPassword = (inputPassword) => {
-    const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
+  const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
     return regex.test(inputPassword);
   }
   const isAlphanumeric = (str) => /^[a-zA-Z0-9]+$/.test(str);
@@ -26,13 +26,13 @@ const Login = () => {
 
     
     if (!isValidPassword(password)) {
-      alert("La contraseña no debe contener caracteres especiales ni la letra 'ñ'.");
+      alert("La contraseña no debe contener caracteres especiales ni la letra 'ñ'.");}
     if (!email.trim() || !password.trim()) {
       alert('Por favor, completa todos los campos');
       return;
     }
-    if ( !isAlphanumeric(password)) {
-      alert('Los campos solo pueden contener letras y números');
+     if ( !isAlphanumeric(password)) {
+       alert('Los campos solo pueden contener letras y números');
       return;
     }
 
@@ -73,6 +73,6 @@ const Login = () => {
     </div>
   );
 };
-}
+
 
 export default Login;
