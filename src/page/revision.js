@@ -5,9 +5,14 @@ import Buscar from "../img/icono_buscar.png";
 
 function Revision() {
   const [filtroEstado, setFiltroEstado] = useState("todo");
+  const [busquedaDescripcion, setBusquedaDescripcion] = useState("");
 
   const handleSelectChange = (e) => {
     setFiltroEstado(e.target.value);
+  };
+
+  const handleInputChange = (e) => {
+    setBusquedaDescripcion(e.target.value);
   };
 
   return (
@@ -17,9 +22,13 @@ function Revision() {
       <div className="flex mt-3 ml-[30%] mb-5">
         <div className="flex-1 bg-[#2c28a075] rounded p-1 mr-[20%] flex items-center">
           <img src={Buscar} alt="..." className="w-8 h-6 ml-3" />
-          <input className="ml-2 outline-none border-none bg-[#2c28a011] text-white w-full" />
+          <input
+            value={busquedaDescripcion}
+            onChange={handleInputChange}
+            className="ml-2 outline-none border-none bg-[#2c28a011] text-white w-full"
+          />
         </div>
-        <div className="flex-1  max-w-32 rounded mr-14">
+        <div className="flex-1 max-w-32 rounded mr-14">
           <select
             className="bg-[#2c28a075] text-white w-full rounded font-bold"
             value={filtroEstado}
@@ -37,7 +46,7 @@ function Revision() {
           </select>
         </div>
       </div>
-      <TableWorks filtroEstado={filtroEstado} />
+      <TableWorks filtroEstado={filtroEstado} busquedaDescripcion={busquedaDescripcion} />
     </>
   );
 }
