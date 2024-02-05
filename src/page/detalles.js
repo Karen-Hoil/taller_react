@@ -14,9 +14,6 @@ function Detalles() {
   const [material, setMaterial] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [trabajoTerminado, setTrabajoTerminado] = useState(false);
-  const [confirmMessage, setConfirmMessage] = useState("");
-  const [updateMessage, setUpdateMessage] = useState("");
 
   const fetchData = async () => {
     try {
@@ -42,30 +39,52 @@ function Detalles() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-    fetchMaterialData();
-  }, []);
+  const openModal = async () => {
+    await fetchData();
+    await fetchMaterialData();
+    setModalOpen(true);
+    setNombre(trabajo.nombre || "");
+    setDescripcion(trabajo.descripcion || "");
+    setHoras(trabajo.horas || "");
+  };
 
-  const closeModals = () => {
+  const closeModal = () => {
     setModalOpen(false);
+  };
+
+  const openConfirmModal = () => {
+    setConfirmModalOpen(true);
+  };
+
+  const closeConfirmModal = () => {
     setConfirmModalOpen(false);
   };
 
   const handleConfirm = async () => {
     try {
       // Lógica para marcar el trabajo como terminado
-      // Aquí puedes realizar cualquier acción necesaria al confirmar
-      // en este caso, simplemente mostramos un mensaje estático
-      setConfirmMessage("El trabajo se ha marcado como terminado");
+      const response = await axios.put(
+        `http://localhost:8082/trabajos/${id_trabajo}/marcar-terminado`
+      );
+      console.log("Respuesta al marcar como terminado:", response.data);
+      alert("El trabajo se ha marcado como terminado");
+
+      // Actualizar trabajo con los nuevos datos después de marcar como terminado
+      await fetchData();
+      window.location.reload();
 
     } catch (error) {
       console.error("Error al marcar como terminado:", error);
       // Manejar el error si es necesario
     } finally {
-      closeModals();
+      closeConfirmModal();
     }
   };
+
+  useEffect(() => {
+    fetchData();
+    fetchMaterialData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,14 +123,18 @@ function Detalles() {
         "Respuesta del servidor (Material):",
         responseMaterial.data
       );
-
-      // Mostrar notificación de éxito al actualizar el trabajo
-      setUpdateMessage("Se actualizó el trabajo con éxito");
-
+      alert("Se actualizó el trabajo con éxito");
+      closeModal();
+      setNombre("");
+      setDescripcion("");
+      setHoras("");
+      setCosto("");
+      setMaterial("");
+      window.location.reload();
     } catch (error) {
       console.error("Error al realizar la solicitud POST:", error.response.data);
     } finally {
-      closeModals();
+      closeModal();
     }
   };
 
@@ -152,6 +175,7 @@ function Detalles() {
                   {trabajo.estado === "terminado" ? "Terminado" : "En proceso"}
                 </p>
               </div>
+
             </div>
           </div>
         )}
@@ -159,10 +183,14 @@ function Detalles() {
         <div className="flex-1">
           <h4>Materiales:</h4>
           <p className="max-w-[80%] h-[100%] max-h-[100%] border-gray-300 border-2 rounded px-2 shadow-md">
-            {materiales.map((materia, index) => (
+            {materiales
+              .filter((materia) => materia.material.trim() !== " ") //Filtrar materiales vacios
+              .map((materia, index) => (
               <span key={materia.id}>
                 {materia.material}
-                {index !== materiales.length - 1 && <br />}
+                {index !== materiales.length - 1 && materia.material.trim() !== "" && (
+                  <br />
+                ) }
               </span>
             ))}
           </p>
@@ -227,7 +255,7 @@ function Detalles() {
               />
             </div>
             <button
-              onClick={closeModals}
+              onClick={closeModal}
               className="bg-[#696969] text-white px-4 py-1 rounded w-30 mr-2 mt-4"
             >
               <b>Cerrar</b>
@@ -256,7 +284,7 @@ function Detalles() {
                 <b>Sí, marcar como terminado</b>
               </button>
               <button
-                onClick={closeModals}
+                onClick={closeConfirmModal}
                 className="bg-[#696969] text-white px-4 py-1 rounded w-30 ml-2"
               >
                 <b>Cancelar</b>
@@ -265,47 +293,15 @@ function Detalles() {
           </div>
         </div>
       )}
-      {confirmMessage && (
-        <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
-          <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-            <h2 className="text-center mb-4">Mensaje</h2>
-            <p className="mb-4 text-gray-700">{confirmMessage}</p>
-            <div className="flex justify-center">
-              <button
-                onClick={() => setConfirmMessage("")}
-                className="bg-[#696969] text-white px-4 py-1 rounded w-30"
-              >
-                <b>Cerrar</b>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {updateMessage && (
-        <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
-          <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-            <h2 className="text-center mb-4">Mensaje</h2>
-            <p className="mb-4 text-gray-700">{updateMessage}</p>
-            <div className="flex justify-center">
-              <button
-                onClick={() => setUpdateMessage("")}
-                className="bg-[#696969] text-white px-4 py-1 rounded w-30"
-              >
-                <b>Cerrar</b>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       <div className="mt-[7%] mb-10 ml-[43%] flex">
         <button
-          onClick={() => setModalOpen(true)}
+          onClick={openModal}
           className="bg-blue-800 text-white px-4 py-1 rounded w-44 mr-2"
         >
           <b>Editar trabajo</b>
         </button>
         <button
-          onClick={() => setConfirmModalOpen(true)}
+          onClick={openConfirmModal}
           className="bg-[#FF0000] text-white px-4 py-1 rounded w-44"
           disabled={trabajo.estado === "terminado"}
         >
