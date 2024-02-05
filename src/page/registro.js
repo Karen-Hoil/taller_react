@@ -71,7 +71,7 @@ const Login = () => {
     });
 
     if (response.status) {
-      window.location.href = "/inicio";
+      window.location.href = "/";
     } else {
       setEmail("");
       setPassword("");
