@@ -45,7 +45,7 @@ export default function TableWorks({ filtroEstado, busquedaDescripcion }) {
   const filaTable = (datos) => {
     const trabajosFiltrados = filtroEstado === "todo"
       ? trabajos
-      : trabajos.filter(trabajo => trabajo.estatus.data[0] === (filtroEstado === "en-proceso" ? 0 : 1));
+      : trabajos.filter(trabajo => trabajo.estatus === (filtroEstado === "en-proceso" ? 0 : 1));
 
     const trabajosFiltradosDescripcion = busquedaDescripcion
       ? trabajosFiltrados.filter(trabajo => trabajo.descripcion.toLowerCase().includes(busquedaDescripcion.toLowerCase()))
@@ -57,7 +57,7 @@ export default function TableWorks({ filtroEstado, busquedaDescripcion }) {
         <td>{elementos.descripcion}</td>
         <td>{elementos.tipo}</td>
         <td>{elementos.horas}</td>
-        <td>{elementos.estatus.data[0] === 0 ? "En proceso" : "Terminado"}</td>
+        <td>{elementos.estatus === 0 ? "En proceso" : "Terminado"}</td>
         <td>{elementos.fecha_creacion}</td>
         <td colSpan={Object.keys(elementos).length}>
           <Link to={`/detalles/${elementos.id_trabajo}`}>Ver Detalles</Link>
