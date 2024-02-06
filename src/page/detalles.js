@@ -69,6 +69,7 @@ function Detalles() {
       );
       console.log("Respuesta del servidor (Trabajo):", responseTrabajo.data);
       setConfirmMessage("El trabajo se ha marcado como terminado");
+      window.location.reload();
     } catch (error) {
       console.error("Error al marcar como terminado:", error);
       // Manejar el error si es necesario
@@ -81,7 +82,7 @@ function Detalles() {
     
     e.preventDefault();
     
-    if (!nombre.trim() || !descripcion.trim() || !horas.trim() || !costo.trim() || !material.trim()) {
+    if (!horas.trim() || !costo.trim() || !material.trim()) {
       alert("Por favor, complete todos los campos.");
       return;
     }
@@ -124,10 +125,9 @@ function Detalles() {
         "Respuesta del servidor (Material):",
         responseMaterial.data
       );
-
       // Mostrar notificación de éxito al actualizar el trabajo
       setUpdateMessage("Se actualizó el trabajo con éxito");
-
+      window.location.reload();
     } catch (error) {
       console.error("Error al realizar la solicitud POST:", error.response.data);
     } finally {
@@ -193,25 +193,6 @@ function Detalles() {
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
         <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
           <h2 className="text-center mb-4">Editar trabajo</h2>
-          <label htmlFor="editName">Nombre del trabajo:</label>
-          <input
-            id="editName"
-            name="editName"
-            type="text"
-            required=""
-            value={nombre}
-            className="form-input mb-2 w-full"
-            onChange={(e) => setNombre(e.target.value)}
-          />
-          <label htmlFor="editDescription">Descripción:</label>
-          <textarea
-            id="editDescription"
-            name="editDescription"
-            required=""
-            value={descripcion}
-            className="form-input mb-2 w-full"
-            onChange={(e) => setDescripcion(e.target.value)}
-          />
             <label htmlFor="editHours">Horas adicionales:</label>
             <input
               id="editHours"
