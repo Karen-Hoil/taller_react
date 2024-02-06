@@ -7,8 +7,6 @@ function Detalles() {
   const { id_trabajo } = useParams();
   const [trabajo, setTrabajo] = useState({});
   const [materiales, setMateriales] = useState([]);
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
   const [horas, setHoras] = useState("");
   const [costo, setCosto] = useState("");
   const [material, setMaterial] = useState("");
@@ -61,7 +59,6 @@ function Detalles() {
 
     } catch (error) {
       console.error("Error al marcar como terminado:", error);
-      // Manejar el error si es necesario
     } finally {
       closeModals();
     }
@@ -71,7 +68,7 @@ function Detalles() {
     
     e.preventDefault();
     
-    if (!nombre.trim() || !descripcion.trim() || !horas.trim() || !costo.trim() || !material.trim()) {
+    if (!horas.trim() || !costo.trim() || !material.trim()) {
       alert("Por favor, complete todos los campos.");
       return;
     }
@@ -86,8 +83,6 @@ function Detalles() {
     }
 
     const trabajoData = {
-      nombre: nombre,
-      descripcion: descripcion,
       horas: horas,
     };
 
@@ -96,8 +91,6 @@ function Detalles() {
       precio: costo,
       id: id_trabajo,
     };
-
-    
 
     try {
       const responseTrabajo = await axios.put(
@@ -117,6 +110,7 @@ function Detalles() {
 
       // Mostrar notificación de éxito al actualizar el trabajo
       setUpdateMessage("Se actualizó el trabajo con éxito");
+      window.location.reload();
 
     } catch (error) {
       console.error("Error al realizar la solicitud POST:", error.response.data);
@@ -148,7 +142,7 @@ function Detalles() {
                   {trabajo.horas}
                 </p>
               </div>
-              <div className="flex flex-col ml-[20%]">
+              <div className="flex flex-col ml-[10%]">
                 <h4>Total material:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
                   ${materiales.reduce(
@@ -157,7 +151,7 @@ function Detalles() {
                   )}
                 </p>
               </div>
-              <div className="flex flex-col ml-[20%]">
+              <div className="flex flex-col ml-[10%]">
                 <h4>Estatus:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
                   {trabajo.estado === "terminado" ? "Terminado" : "En proceso"}
@@ -166,10 +160,9 @@ function Detalles() {
             </div>
           </div>
         )}
-
         <div className="flex-1">
           <h4>Materiales:</h4>
-          <p className="max-w-[80%] h-[100%] max-h-[100%] border-gray-300 border-2 rounded px-2 shadow-md">
+          <p className="max-w-[80%] h-[80%] max-h-[80%] border-gray-300 border-2 rounded px-2 shadow-md">
             {materiales.map((materia, index) => (
               <span key={materia.id}>
                 {materia.material}
@@ -183,25 +176,6 @@ function Detalles() {
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
           <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
             <h2 className="text-center mb-4">Editar trabajo</h2>
-            <label htmlFor="editName">Nombre del trabajo:</label>
-            <input
-              id="editName"
-              name="editName"
-              type="text"
-              required=""
-              value={nombre}
-              className="form-input mb-2 w-full"
-              onChange={(e) => setNombre(e.target.value)}
-            />
-            <label htmlFor="editDescription">Descripción:</label>
-            <textarea
-              id="editDescription"
-              name="editDescription"
-              required=""
-              value={descripcion}
-              className="form-input mb-2 w-full"
-              onChange={(e) => setDescripcion(e.target.value)}
-            />
             <label htmlFor="editHours">Horas adicionales:</label>
             <input
               id="editHours"

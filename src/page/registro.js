@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import '../css/login.css'; 
 import icono_herramienta from "../img/icono_herramienta.png";
@@ -9,6 +9,20 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [codigo, setCodigo] = useState(""); 
+  const [codigoGenerado, setCodigoGenerado] = useState(false); // Estado para controlar si se ha generado el código
+
+  const generarToken = async () =>{
+    const response = await axios.post(`http://localhost:8082/api/auth/login/maximoquinteroescobar8@gmail.com/code`);
+    if (response.data.ok) {
+      setCodigo(response.data.codigo);
+      console.log(codigo)
+      alert("Código generado correctamente.");
+      setCodigoGenerado(true); // Establecer el estado de código generado a verdadero
+    } else {
+      alert("Error al generar el código.");
+    }
+  }  
 
   const isValidPassword = (inputPassword) => {
     const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
@@ -28,57 +42,13 @@ const Login = () => {
   const login = async (e) => {
     e.preventDefault();
 
-    // Verificar campos vacíos
-    if (email.trim() === "" || password.trim() === "" || confirmPassword.trim() === "" || username.trim() === "") {
-      alert("Por favor, completa todos los campos.");
+    if (!codigoGenerado) { // Verificar si el código ha sido generado
+      alert("Por favor, genera el código primero.");
       return;
     }
 
-    // Validar longitud de contraseña
-    if (password.length < 6) {
-      setPasswordErrorMessage("La contraseña debe tener al menos 6 caracteres.");
-      return;
-    }
+    // Resto del código de validación...
 
-    // Validar contraseña
-    if (!isValidPassword(password)) {
-      setPasswordErrorMessage("La contraseña no debe contener caracteres especiales ni la letra 'ñ'.");
-      return;
-    }
-
-    // Validar números consecutivos
-    if (!hasConsecutiveNumbers(password)) {
-      setPasswordErrorMessage("La contraseña no puede contener números consecutivos.");
-      return;
-    }
-
-    // Verificar coincidencia de contraseñas
-    if (password !== confirmPassword) {
-      setPasswordErrorMessage("Las contraseñas no coinciden.");
-      return;
-    }
-
-    // Validar nombre de usuario
-    if (!isUsernameValid(username)) {
-      setPasswordErrorMessage("Nombre de usuario no permitido. Por favor, elige otro nombre.");
-      return;
-    }
-
-    const response = await axios.post("http://localhost:8082/mecanicos", {
-      nombre: username,
-      correo: email,
-      contraseña: password,
-    });
-
-    if (response.status) {
-      window.location.href = "/";
-    } else {
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setUsername("");
-      setPasswordErrorMessage("Prueba con otro correo, contraseña o nombre de usuario");
-    }
   };
 
   return (
@@ -100,6 +70,7 @@ const Login = () => {
         <label htmlFor="confirmPassword">Confirmar Contraseña:</label>
         <input type="password" id="confirmPassword" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         {passwordErrorMessage && <p className="error-message">{passwordErrorMessage}</p>}
+        <button type="button" className="mx-auto block bg-blue-800 text-white mb-3 w-[30%] rounded p-2" onClick={generarToken} disabled={codigoGenerado}>Generar código</button>
         <button type="submit" className="login-button">Registrate</button>
       </form>
       <div className="register-link">
