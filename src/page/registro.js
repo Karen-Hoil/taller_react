@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import '../css/login.css'; 
 import icono_herramienta from "../img/icono_herramienta.png";
@@ -9,6 +9,24 @@ const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [codigo, setCodigo] = useState(""); 
+  const [codigoGenerado, setCodigoGenerado] = useState(false); // Estado para controlar si se ha generado el código
+
+  const generarToken = async () =>{
+    const response = await axios.post(`http://localhost:8082/api/auth/login/maximoquinteroescobar8@gmail.com/code`);
+    if (response.data.ok) {
+      setCodigo(response.data.codigo);
+      console.log(codigo)
+      alert("Código generado correctamente.");
+      setCodigoGenerado(true);
+    } else {
+      alert("Error al generar el código.");
+    }
+  }  
+
+  useEffect(() =>{
+    console.log(codigo)
+},[codigo])
 
   const isValidPassword = (inputPassword) => {
     const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
@@ -27,6 +45,11 @@ const Login = () => {
 
   const login = async (e) => {
     e.preventDefault();
+
+    if (codigo === "") {
+      alert("Por favor, genera el código primero.");
+      return;
+    }
 
     // Verificar campos vacíos
     if (email.trim() === "" || password.trim() === "" || confirmPassword.trim() === "" || username.trim() === "") {
@@ -68,10 +91,11 @@ const Login = () => {
       nombre: username,
       correo: email,
       contraseña: password,
+      codigo: codigo
     });
 
     if (response.status) {
-      window.location.href = "/inicio";
+      window.location.href = "/";
     } else {
       setEmail("");
       setPassword("");
@@ -100,10 +124,11 @@ const Login = () => {
         <label htmlFor="confirmPassword">Confirmar Contraseña:</label>
         <input type="password" id="confirmPassword" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         {passwordErrorMessage && <p className="error-message">{passwordErrorMessage}</p>}
+        <button type="button" className="mx-auto block bg-blue-800 text-white mb-3 w-[30%] rounded p-2" onClick={generarToken} disabled={codigoGenerado}>Generar código</button>
         <button type="submit" className="login-button">Registrate</button>
       </form>
       <div className="register-link">
-        <p className="pb-10">¿Ya tiene cuenta? <a href="/">Logueate</a></p> 
+        <p className="pb-10">¿Ya tiene cuenta? <a href="/">Inicia sesión</a></p> 
       </div>
     </div>
   );

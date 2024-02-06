@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
 
-export default function TableWorks() {
+export default function TableWorks({ filtroEstado, busquedaDescripcion }) {
   const [trabajos, setTrabajos] = useState([]);
 
   useEffect(() => {
@@ -43,8 +43,15 @@ export default function TableWorks() {
   };
 
   const filaTable = (datos) => {
-    console.log("Datos en filaTable:", datos);
-    return datos.map((elementos, indice) => (
+    const trabajosFiltrados = filtroEstado === "todo"
+      ? trabajos
+      : trabajos.filter(trabajo => trabajo.estatus.data[0] === (filtroEstado === "en-proceso" ? 0 : 1));
+
+    const trabajosFiltradosDescripcion = busquedaDescripcion
+      ? trabajosFiltrados.filter(trabajo => trabajo.descripcion.toLowerCase().includes(busquedaDescripcion.toLowerCase()))
+      : trabajosFiltrados;
+
+    return trabajosFiltradosDescripcion.map((elementos, indice) => (
       <tr key={indice} className={indice % 2 === 0 ? "bg-gray-100 text-center" : "bg-[#D9D9D9]  text-center"}>
         <td>{elementos.nombre}</td>
         <td>{elementos.descripcion}</td>

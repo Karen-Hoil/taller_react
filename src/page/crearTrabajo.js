@@ -15,8 +15,8 @@ function CrearTrabajo() {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!nombre || !descripcion || !selectedTipoTrabajo) {
-      setShowModal(true);
+    if (!nombre.trim() || !descripcion.trim() || !selectedTipoTrabajo.trim()) {
+      alert("Por favor, complete todos los campos.");
       return;
     }
   

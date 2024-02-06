@@ -1,4 +1,4 @@
-// App.js
+
 import './App.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Inicio from './page/inicio';
@@ -9,6 +9,8 @@ import Detalles from './page/detalles';
 import Reparacion from './page/reparacion';
 import Revision from './page/revision';
 import './css/navar.css';
+import './css/cardAdmin.css';
+import Admin from './page/admin';
 
 function App() {
   const router = createBrowserRouter([
@@ -39,6 +41,10 @@ function App() {
     {
       path: "/revision",
       element: <Revision/>
+    },
+    {
+      path: "/admin",
+      element: <Admin/>
     }
     
   ]);
