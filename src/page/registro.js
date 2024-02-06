@@ -18,11 +18,15 @@ const Login = () => {
       setCodigo(response.data.codigo);
       console.log(codigo)
       alert("Código generado correctamente.");
-      setCodigoGenerado(true); // Establecer el estado de código generado a verdadero
+      setCodigoGenerado(true);
     } else {
       alert("Error al generar el código.");
     }
   }  
+
+  useEffect(() =>{
+    console.log(codigo)
+},[codigo])
 
   const isValidPassword = (inputPassword) => {
     const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
@@ -42,13 +46,63 @@ const Login = () => {
   const login = async (e) => {
     e.preventDefault();
 
-    if (!codigoGenerado) { // Verificar si el código ha sido generado
+    if (codigo === "") {
       alert("Por favor, genera el código primero.");
       return;
     }
 
-    // Resto del código de validación...
+    // Verificar campos vacíos
+    if (email.trim() === "" || password.trim() === "" || confirmPassword.trim() === "" || username.trim() === "") {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
 
+    // Validar longitud de contraseña
+    if (password.length < 6) {
+      setPasswordErrorMessage("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    // Validar contraseña
+    if (!isValidPassword(password)) {
+      setPasswordErrorMessage("La contraseña no debe contener caracteres especiales ni la letra 'ñ'.");
+      return;
+    }
+
+    // Validar números consecutivos
+    if (!hasConsecutiveNumbers(password)) {
+      setPasswordErrorMessage("La contraseña no puede contener números consecutivos.");
+      return;
+    }
+
+    // Verificar coincidencia de contraseñas
+    if (password !== confirmPassword) {
+      setPasswordErrorMessage("Las contraseñas no coinciden.");
+      return;
+    }
+
+    // Validar nombre de usuario
+    if (!isUsernameValid(username)) {
+      setPasswordErrorMessage("Nombre de usuario no permitido. Por favor, elige otro nombre.");
+      return;
+    }
+
+    const response = await axios.post("http://localhost:8082/mecanicos", {
+      nombre: username,
+      correo: email,
+      contraseña: password,
+      codigo: codigo
+    });
+
+    if (response.status) {
+      window.location.href = "/";
+    } else {
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setUsername("");
+      setPasswordErrorMessage("Prueba con otro correo, contraseña o nombre de usuario");
+    }
   };
 
   return (
