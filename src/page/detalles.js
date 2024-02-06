@@ -16,10 +16,11 @@ function Detalles() {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [trabajoTerminado, setTrabajoTerminado] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
+  const [estatusTrabajo, setEstatusTrabajo] = useState("");
+  const [botonesHabilitados, setBotonesHabilitados] = useState(true);
   const [updateMessage, setUpdateMessage] = useState("");
   const [currentNombre, setCurrentNombre] = useState(""); // Nuevo estado para almacenar el nombre actual
   const [currentDescripcion, setCurrentDescripcion] = useState(""); // Nuevo estado para almacenar la descripción actual
-  
 
   const fetchData = async () => {
     try {
@@ -28,6 +29,7 @@ function Detalles() {
       );
       console.log("Datos obtenidos:", response.data);
       setTrabajo(response.data[0] || {});
+      setEstatusTrabajo(response.data[0]?.estado || "");
     } catch (error) {
       console.error("Error al obtener datos:", error);
     }
@@ -55,8 +57,8 @@ function Detalles() {
     setCurrentNombre(trabajo.nombre || "");
     setCurrentDescripcion(trabajo.descripcion || "");
     setModalOpen(true);
-  }; 
-  
+  };
+
   const closeModals = () => {
     setModalOpen(false);
     setConfirmModalOpen(false);
@@ -65,10 +67,13 @@ function Detalles() {
   const handleConfirm = async () => {
     try {
       const responseTrabajo = await axios.put(
-        `http://localhost:8082/trabajosEstatus/${id_trabajo}`,
+        `http://localhost:8082/trabajosEstatus/${id_trabajo}`
       );
       console.log("Respuesta del servidor (Trabajo):", responseTrabajo.data);
       setConfirmMessage("El trabajo se ha marcado como terminado");
+      alert("El trabajo se ha marcado como terminado con éxito");
+      setBotonesHabilitados(false);
+      localStorage.setItem(`botonesHabilitados_${id_trabajo}`, "false");
       window.location.reload();
     } catch (error) {
       console.error("Error al marcar como terminado:", error);
@@ -77,17 +82,27 @@ function Detalles() {
       closeModals();
     }
   };
+  useEffect(() => {
+    setEstatusTrabajo(trabajo.estado || " ");
 
-  const handleSubmit = async (e) =>{
-    
+    //     // Verificar en localStorage si los botones deben estar habilitados
+    const estadoGuardado = localStorage.getItem(
+      `botonesHabilitados_${id_trabajo}`
+    );
+    if (estadoGuardado === "false") {
+      setBotonesHabilitados(false);
+    } else {
+      setBotonesHabilitados(true);
+    }
+  }, [trabajo.estado, id_trabajo]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!horas.trim() || !costo.trim() || !material.trim()) {
       alert("Por favor, complete todos los campos.");
       return;
     }
-  
-    
 
     if ((!material && costo) || (material && !costo)) {
       alert(
@@ -108,8 +123,6 @@ function Detalles() {
       id: id_trabajo,
     };
 
-    
-
     try {
       const responseTrabajo = await axios.put(
         `http://localhost:8082/trabajos/${id_trabajo}`,
@@ -121,19 +134,24 @@ function Detalles() {
         "http://localhost:8082/materiales",
         materialData
       );
-      console.log(
-        "Respuesta del servidor (Material):",
-        responseMaterial.data
-      );
+      console.log("Respuesta del servidor (Material):", responseMaterial.data);
       // Mostrar notificación de éxito al actualizar el trabajo
       setUpdateMessage("Se actualizó el trabajo con éxito");
+      closeModals();
+      setNombre("");
+      setDescripcion("");
+      setHoras("");
+      setCosto("");
+      setMaterial("");
       window.location.reload();
     } catch (error) {
-      console.error("Error al realizar la solicitud POST:", error.response.data);
+      console.error(
+        "Error al realizar la solicitud POST:",
+        error.response.data
+      );
     } finally {
       closeModals();
     }
-    
   };
 
   return (
@@ -161,7 +179,8 @@ function Detalles() {
               <div className="flex flex-col ml-[10%]">
                 <h4>Total material:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
-                  ${materiales.reduce(
+                  $
+                  {materiales.reduce(
                     (total, material) => total + material.precio,
                     0
                   )}
@@ -191,8 +210,8 @@ function Detalles() {
       </div>
       {modalOpen && (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
-        <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-          <h2 className="text-center mb-4">Editar trabajo</h2>
+          <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+            <h2 className="text-center mb-4">Editar trabajo</h2>
             <label htmlFor="editHours">Horas adicionales:</label>
             <input
               id="editHours"
@@ -213,7 +232,9 @@ function Detalles() {
               className="form-input mb-4 w-full"
               onChange={(e) => setMaterial(e.target.value)}
             />
-            <label htmlFor="editCost">Precio total de materiales adicionales:</label>
+            <label htmlFor="editCost">
+              Precio total de materiales adicionales:
+            </label>
             <div className="relative mb-2">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-700">
                 $
@@ -300,16 +321,20 @@ function Detalles() {
         </div>
       )}
       <div className="mt-[7%] mb-10 ml-[43%] flex">
-      <button
-          onClick={openEditModal} // Cambiado a la función openEditModal
-          className="bg-blue-800 text-white px-4 py-1 rounded w-44 mr-2"
+        <button
+          onClick={openEditModal}
+          className={`bg-blue-800 text-white px-4 py-1 rounded w-44 mr-2 ${
+            trabajo.estatus === 1 ? "hidden" : ""
+          }`}
+          disabled={!botonesHabilitados}
         >
           <b>Editar trabajo</b>
         </button>
         <button
           onClick={() => setConfirmModalOpen(true)}
-          className="bg-[#FF0000] text-white px-4 py-1 rounded w-44"
-          disabled={trabajo.estado === "terminado"}
+          className={`bg-[#FF0000] text-white px-4 py-1 rounded w-44 ${
+            trabajo.estatus === 1 ? "hidden" : ""
+          }`}
         >
           <b>Marcar como terminado</b>
         </button>
