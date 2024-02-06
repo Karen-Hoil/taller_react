@@ -13,6 +13,7 @@ const Login = () => {
   };
 
   const passwordType = showPassword ? "text" : "password";
+  const [codigo, setCodigo] = useState('');
 
   const isValidPassword = (inputPassword) => {
   const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
@@ -21,15 +22,10 @@ const Login = () => {
   const isAlphanumeric = (str) => /^[a-zA-Z0-9]+$/.test(str);
 
 
-  const isSafeInput = (input) => {
-    // Evitar inyección SQL básica
-    return !input.includes("'") && !input.includes('"') && !input.includes(";");
-  };
-
   const login = async (e) => {
     e.preventDefault();
 
-    if (email.trim() === "" || password.trim() === "") {
+    if (email.trim() === "" || password.trim() === "" || codigo.trim() === '') {
       alert("Por favor, completa todos los campos.");
       return;
     }
@@ -50,6 +46,7 @@ const Login = () => {
     const response = await axios.post("http://localhost:8082/login", {
       correo: email,
       contraseña: password,
+      codigo: codigo,
     });
 
     if (response.data.status) {
@@ -62,6 +59,7 @@ const Login = () => {
     } else {
       setEmail("");
       setPassword("");
+      setCodigo('')
       alert("Prueba con otro correo o contraseña");
     }
   };
@@ -81,7 +79,6 @@ const Login = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
         
         <label htmlFor="password">Contraseña:</label>
         <div className="password-input-container">
@@ -101,11 +98,19 @@ const Login = () => {
             {showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
           </button>
         </div>
+        <label htmlFor="email">Codigo:</label>
+        <input
+          type="codigo"
+          id="codigo"
+          name="codigo"
+          value={codigo}
+          onChange={(e) => setCodigo(e.target.value)}
+        />
         <button type="submit" className="login-button">
           Iniciar sesión
         </button>
       </form>
-      <div className="register-link">
+      <div className="register-link mb-5">
         <p>
           ¿Eres nuevo? <a href="/registro">Regístrate</a>
         </p>
