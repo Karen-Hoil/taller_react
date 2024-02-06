@@ -17,6 +17,9 @@ function Detalles() {
   const [trabajoTerminado, setTrabajoTerminado] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
   const [updateMessage, setUpdateMessage] = useState("");
+  const [currentNombre, setCurrentNombre] = useState(""); // Nuevo estado para almacenar el nombre actual
+  const [currentDescripcion, setCurrentDescripcion] = useState(""); // Nuevo estado para almacenar la descripción actual
+  
 
   const fetchData = async () => {
     try {
@@ -47,6 +50,13 @@ function Detalles() {
     fetchMaterialData();
   }, []);
 
+  const openEditModal = () => {
+    // Al abrir el modal, establecer el nombre y la descripción actuales en los nuevos estados
+    setCurrentNombre(trabajo.nombre || "");
+    setCurrentDescripcion(trabajo.descripcion || "");
+    setModalOpen(true);
+  }; 
+  
   const closeModals = () => {
     setModalOpen(false);
     setConfirmModalOpen(false);
@@ -181,27 +191,27 @@ function Detalles() {
       </div>
       {modalOpen && (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
-          <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-            <h2 className="text-center mb-4">Editar trabajo</h2>
-            <label htmlFor="editName">Nombre del trabajo:</label>
-            <input
-              id="editName"
-              name="editName"
-              type="text"
-              required=""
-              value={nombre}
-              className="form-input mb-2 w-full"
-              onChange={(e) => setNombre(e.target.value)}
-            />
-            <label htmlFor="editDescription">Descripción:</label>
-            <textarea
-              id="editDescription"
-              name="editDescription"
-              required=""
-              value={descripcion}
-              className="form-input mb-2 w-full"
-              onChange={(e) => setDescripcion(e.target.value)}
-            />
+        <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+          <h2 className="text-center mb-4">Editar trabajo</h2>
+          <label htmlFor="editName">Nombre del trabajo:</label>
+          <input
+            id="editName"
+            name="editName"
+            type="text"
+            required=""
+            value={nombre}
+            className="form-input mb-2 w-full"
+            onChange={(e) => setNombre(e.target.value)}
+          />
+          <label htmlFor="editDescription">Descripción:</label>
+          <textarea
+            id="editDescription"
+            name="editDescription"
+            required=""
+            value={descripcion}
+            className="form-input mb-2 w-full"
+            onChange={(e) => setDescripcion(e.target.value)}
+          />
             <label htmlFor="editHours">Horas adicionales:</label>
             <input
               id="editHours"
@@ -309,8 +319,8 @@ function Detalles() {
         </div>
       )}
       <div className="mt-[7%] mb-10 ml-[43%] flex">
-        <button
-          onClick={() => setModalOpen(true)}
+      <button
+          onClick={openEditModal} // Cambiado a la función openEditModal
           className="bg-blue-800 text-white px-4 py-1 rounded w-44 mr-2"
         >
           <b>Editar trabajo</b>

@@ -60,7 +60,10 @@ function CrearTrabajo() {
         <h2 className="text-center mt-3">Agregar trabajo</h2>
         <div className="form-container_crear">
           <form method="POST">
-            <div className="form-group">
+            <div
+              className="form-group"
+              style={{ display: "flex", flexDirection: "column" }}
+            >
               <label htmlFor="name">Nombre del trabajo:</label>
               <input
                 id="name"
@@ -73,13 +76,17 @@ function CrearTrabajo() {
                 onChange={(e) => {
                   setNombre(e.target.value);
                 }}
+                style={{ paddingLeft: 10 }}
               />
             </div>
 
-            <div className="form-group">
+            <div
+              className="form-group"
+              style={{ display: "flex", flexDirection: "column" }}
+            >
               <label htmlFor="username">Descripción:</label>
               <input
-                id="username"
+                id="username" 
                 name="username"
                 placeholder="Descripción"
                 type="text"
@@ -89,9 +96,10 @@ function CrearTrabajo() {
                 onChange={(e) => {
                   setDescripcion(e.target.value);
                 }}
+                style={{ paddingLeft: 10, whiteSpace: 'pre-line' }}
               />
             </div>
-            <div className="flex-1  max-w-100 rounded mr-14">
+            <div className="flex-1  max-w-100 rounded mr-14 mt-14">
               <p>Tipo de trabajo:</p>
               <select
                 className="bg-[#2c28a0] text-white w-full rounded font-bold"

@@ -6,6 +6,13 @@ import icono_herramienta from "../img/icono_herramienta.png";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const passwordType = showPassword ? "text" : "password";
 
   const isValidPassword = (inputPassword) => {
   const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
@@ -75,14 +82,25 @@ const Login = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
 
+        
         <label htmlFor="password">Contraseña:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="password-input-container">
+          <input
+            type={passwordType}
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            type="button"
+            className="password-toggle-button"
+            onClick={togglePasswordVisibility}
+            style={{fontWeight:'bold', color:'blue', marginBottom:20}}
+          >
+            {showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+          </button>
+        </div>
         <button type="submit" className="login-button">
           Iniciar sesión
         </button>

@@ -10,6 +10,7 @@ import Reparacion from './page/reparacion';
 import Revision from './page/revision';
 import './css/navar.css';
 import './css/cardAdmin.css';
+import './css/crear.css';
 import Admin from './page/admin';
 
 function App() {
