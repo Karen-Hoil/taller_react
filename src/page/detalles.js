@@ -64,11 +64,11 @@ function Detalles() {
 
   const handleConfirm = async () => {
     try {
-      // Lógica para marcar el trabajo como terminado
-      // Aquí puedes realizar cualquier acción necesaria al confirmar
-      // en este caso, simplemente mostramos un mensaje estático
+      const responseTrabajo = await axios.put(
+        `http://localhost:8082/trabajosEstatus/${id_trabajo}`,
+      );
+      console.log("Respuesta del servidor (Trabajo):", responseTrabajo.data);
       setConfirmMessage("El trabajo se ha marcado como terminado");
-
     } catch (error) {
       console.error("Error al marcar como terminado:", error);
       // Manejar el error si es necesario
@@ -158,7 +158,7 @@ function Detalles() {
                   {trabajo.horas}
                 </p>
               </div>
-              <div className="flex flex-col ml-[20%]">
+              <div className="flex flex-col ml-[10%]">
                 <h4>Total material:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
                   ${materiales.reduce(
@@ -167,7 +167,7 @@ function Detalles() {
                   )}
                 </p>
               </div>
-              <div className="flex flex-col ml-[20%]">
+              <div className="flex flex-col ml-[10%]">
                 <h4>Estatus:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
                   {trabajo.estado === "terminado" ? "Terminado" : "En proceso"}
