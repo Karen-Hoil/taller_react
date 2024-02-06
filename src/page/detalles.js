@@ -170,7 +170,7 @@ function Detalles() {
               <div className="flex flex-col ml-[10%]">
                 <h4>Estatus:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
-                  {trabajo.estado === "terminado" ? "Terminado" : "En proceso"}
+                  {trabajo.estatus === 1 ? "Terminado" : "En proceso"}
                 </p>
               </div>
             </div>
