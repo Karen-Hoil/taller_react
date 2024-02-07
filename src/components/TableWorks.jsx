@@ -59,8 +59,8 @@ export default function TableWorks({ filtroEstado, busquedaDescripcion }) {
         <td>{elementos.horas}</td>
         <td>{elementos.estatus === 0 ? "En proceso" : "Terminado"}</td>
         <td>{elementos.fecha_creacion}</td>
-        <td colSpan={Object.keys(elementos).length}>
-          <Link to={`/detalles/${elementos.id_trabajo}`}>Ver Detalles</Link>
+        <td colSpan={Object.keys(elementos).length}><button className="bg-blue-800 rounded p-1">
+          <Link className="text-white" to={`/detalles/${elementos.id_trabajo}`}>Ver Detalles</Link></button>
         </td>
       </tr>
     ));
