@@ -51,6 +51,7 @@ const Login = () => {
 
     if (response.data.status) {
       console.log(response.data);
+      localStorage.setItem('loggedInUserName', response.data.nombre); // Guarda el nombre del usuario en el localStorage
       if (response.data.tipo_usuario === 1) {
         localStorage.setItem('isLoggedIn', 'true');
         window.location.href = "/admin";

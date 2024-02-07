@@ -62,7 +62,7 @@ function CrearTrabajo() {
   return (
     <>
       <Header />
-      <div className="container_crear">
+      <div className="container_crear ">
         <h2 className="text-center mt-3">Agregar trabajo</h2>
         <div className="form-container_crear">
           <form method="POST">
@@ -128,7 +128,7 @@ function CrearTrabajo() {
             <div className="form-group">
               <button
                 type="submit"
-                className="submit-button"
+                className="submit-button mb-5"
                 onClick={handleSubmit}
               >
                 Agregar trabajo
