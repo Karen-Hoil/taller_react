@@ -48,12 +48,11 @@ function Detalles() {
   };
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
     if (!isLoggedIn) {
-      window.location.replace('/');
-    };
-
+      window.location.replace("/");
+    }
     fetchData();
     fetchMaterialData();
   }, []);
@@ -63,7 +62,7 @@ function Detalles() {
     setNombre(trabajo.nombre || "");
     setDescripcion(trabajo.descripcion || "");
     setModalOpen(true);
-};
+  };
 
   const closeModals = () => {
     setModalOpen(false);
@@ -88,7 +87,7 @@ function Detalles() {
       closeModals();
     }
   };
-  
+
   // useEffect(() => {
   //   setEstatusTrabajo(trabajo.estado || " ");
 
@@ -161,6 +160,22 @@ function Detalles() {
     }
   };
 
+  const precioTotal = materiales.reduce(
+    (total, material) => total + material.precio,
+    0
+  );
+  const Horas = trabajo.horas;
+  const tipoTrabajo = trabajo.tipo_trabajo_id;
+
+  function precioFinal(){
+  if (tipoTrabajo === 1) {
+    return Horas * 350 + precioTotal * 1.1;
+  } else if (tipoTrabajo === 2) {
+    return Horas * 350 + precioTotal * 1.3;
+  } else {
+    return Horas * 350 + 450;
+  }}
+
   return (
     <div className="bg-gray-200 overflow-y-auto">
       <Header />
@@ -183,7 +198,7 @@ function Detalles() {
                   {trabajo.horas}
                 </p>
               </div>
-              <div className="flex flex-col ml-[10%]">
+              <div className="flex flex-col ml-[5%]">
                 <h4>Total material:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
                   $
@@ -193,10 +208,16 @@ function Detalles() {
                   )}
                 </p>
               </div>
-              <div className="flex flex-col ml-[10%]">
+              <div className="flex flex-col ml-[5%]">
                 <h4>Estatus:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
                   {trabajo.estatus === 1 ? "Terminado" : "En proceso"}
+                </p>
+              </div>
+              <div className="flex flex-col ml-[5%]">
+                <h4>Total general:</h4>
+                <p className="border-gray-300 border-2 rounded px-2 shadow-md">
+                  ${precioFinal()}
                 </p>
               </div>
             </div>
@@ -206,7 +227,7 @@ function Detalles() {
         <div className="flex-1">
           <h4>Materiales:</h4>
           <p className="max-w-[80%] h-[100%] max-h-[100%] border-gray-300 border-2 rounded px-2 shadow-md">
-          {materiales.map((materia, index) => (
+            {materiales.map((materia, index) => (
               <span key={materia.id}>
                 {materia.material}
                 {index !== materiales.length - 1 && <br />}
@@ -220,24 +241,24 @@ function Detalles() {
           <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
             <h2 className="text-center mb-4">Editar trabajo</h2>
             <label htmlFor="editName">Nombre del trabajo:</label>
-          <input
-            id="editName"
-            name="editName"
-            type="text"
-            required=""
-            value={nombre}
-            className="form-input mb-2 w-full"
-            onChange={(e) => setNombre(e.target.value)}
-          />
-          <label htmlFor="editDescription">Descripción:</label>
-          <textarea
-            id="editDescription"
-            name="editDescription"
-            required=""
-            value={descripcion}
-            className="form-input mb-2 w-full"
-            onChange={(e) => setDescripcion(e.target.value)}
-          />
+            <input
+              id="editName"
+              name="editName"
+              type="text"
+              required=""
+              value={nombre}
+              className="form-input mb-2 w-full"
+              onChange={(e) => setNombre(e.target.value)}
+            />
+            <label htmlFor="editDescription">Descripción:</label>
+            <textarea
+              id="editDescription"
+              name="editDescription"
+              required=""
+              value={descripcion}
+              className="form-input mb-2 w-full"
+              onChange={(e) => setDescripcion(e.target.value)}
+            />
             <label htmlFor="editHours">Horas adicionales:</label>
             <input
               id="editHours"
