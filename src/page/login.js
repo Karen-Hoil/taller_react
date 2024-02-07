@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../css/login.css";
 import icono_herramienta from "../img/icono_herramienta.png";
@@ -52,6 +52,7 @@ const Login = () => {
     if (response.data.status) {
       console.log(response.data);
       if (response.data.tipo_usuario === 1) {
+        localStorage.setItem('isLoggedIn', 'true');
         window.location.href = "/admin";
       } else {
         window.location.href = "/inicio";
@@ -63,6 +64,10 @@ const Login = () => {
       alert("Prueba con otro correo o contraseña");
     }
   };
+
+  useEffect(() =>{
+    localStorage.setItem('isLoggedIn', 'false');
+  },[])
 
   return (
     <div className="login-container">
