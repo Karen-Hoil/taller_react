@@ -209,61 +209,78 @@ function Detalles() {
         </div>
       </div>
       {modalOpen && (
-        <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
-          <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-            <h2 className="text-center mb-4">Editar trabajo</h2>
-            <label htmlFor="editHours">Horas adicionales:</label>
-            <input
-              id="editHours"
-              name="editHours"
-              type="number"
-              required=""
-              value={horas}
-              className="form-input mb-2 w-full"
-              onChange={(e) => setHoras(e.target.value)}
-            />
-            <label htmlFor="editMaterial">Materiales adicionales:</label>
-            <input
-              id="editMaterial"
-              name="editMaterial"
-              type="text"
-              required=""
-              value={material}
-              className="form-input mb-4 w-full"
-              onChange={(e) => setMaterial(e.target.value)}
-            />
-            <label htmlFor="editCost">
-              Precio total de materiales adicionales:
-            </label>
-            <div className="relative mb-2">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-700">
-                $
-              </span>
-              <input
-                id="editCost"
-                name="editCost"
-                type="number"
-                required=""
-                value={costo}
-                className="form-input pl-7 w-full"
-                onChange={(e) => setCosto(e.target.value)}
-              />
-            </div>
-            <button
-              onClick={closeModals}
-              className="bg-[#696969] text-white px-4 py-1 rounded w-30 mr-2 mt-4"
-            >
-              <b>Cerrar</b>
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="bg-[#56AA5F] text-white px-4 py-1 rounded w-30 ml-2 mt-4"
-            >
-              <b>Actualizar</b>
-            </button>
-          </div>
-        </div>
-      )}
+  <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
+    <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+      <h2 className="text-center mb-4">Editar trabajo</h2>
+      <label htmlFor="editName">Nombre:</label>
+      <input
+        id="editName"
+        name="editName"
+        type="text"
+        required=""
+        value={nombre}
+        className="form-input mb-2 w-full"
+        onChange={(e) => setNombre(e.target.value)}
+      />
+      <label htmlFor="editDescription">Descripción:</label>
+      <textarea
+        id="editDescription"
+        name="editDescription"
+        required=""
+        value={descripcion}
+        className="form-textarea mb-4 w-full"
+        onChange={(e) => setDescripcion(e.target.value)}
+      />
+      <label htmlFor="editHours">Horas adicionales:</label>
+      <input
+        id="editHours"
+        name="editHours"
+        type="number"
+        required=""
+        value={horas}
+        className="form-input mb-2 w-full"
+        onChange={(e) => setHoras(e.target.value)}
+      />
+      <label htmlFor="editMaterial">Materiales adicionales:</label>
+      <input
+        id="editMaterial"
+        name="editMaterial"
+        type="text"
+        required=""
+        value={material}
+        className="form-input mb-4 w-full"
+        onChange={(e) => setMaterial(e.target.value)}
+      />
+      <label htmlFor="editCost">Precio total de materiales adicionales:</label>
+      <div className="relative mb-2">
+        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-700">
+          $
+        </span>
+        <input
+          id="editCost"
+          name="editCost"
+          type="number"
+          required=""
+          value={costo}
+          className="form-input pl-7 w-full"
+          onChange={(e) => setCosto(e.target.value)}
+        />
+      </div>
+      <button
+        onClick={closeModals}
+        className="bg-[#696969] text-white px-4 py-1 rounded w-30 mr-2 mt-4"
+      >
+        <b>Cerrar</b>
+      </button>
+      <button
+        onClick={handleSubmit}
+        className="bg-[#56AA5F] text-white px-4 py-1 rounded w-30 ml-2 mt-4"
+      >
+        <b>Actualizar</b>
+      </button>
+    </div>
+  </div>
+)}
       {confirmModalOpen && (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
           <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
