@@ -16,7 +16,7 @@ const Login = () => {
     const response = await axios.post(`http://localhost:8082/api/auth/login/maximoquinteroescobar8@gmail.com/code`);
     if (response.data.ok) {
       setCodigo(response.data.codigo);
-      console.log(codigo)
+      console.log(codigo);
       alert("Código generado correctamente.");
       setCodigoGenerado(true);
     } else {
@@ -94,7 +94,9 @@ const Login = () => {
       codigo: codigo
     });
 
-    if (response.status) {
+    if (response.status ===200) {
+      alert("Registro exitoso. Ahora puedes iniciar sesión.");
+      localStorage.setItem('loggedInUserName', username);
       window.location.href = "/";
     } else {
       setEmail("");
