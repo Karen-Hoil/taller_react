@@ -21,6 +21,48 @@ function Detalles() {
   const [updateMessage, setUpdateMessage] = useState("");
   // const [currentNombre, setCurrentNombre] = useState(""); // Nuevo estado para almacenar el nombre actual
   // const [currentDescripcion, setCurrentDescripcion] = useState(""); // Nuevo estado para almacenar la descripción actual
+  
+
+  // Dentro de la función Detalles()
+const totalGeneral = () => {
+  let total = 0;
+
+  // Calcular el costo total de las horas
+  const costoHoras = trabajo.horas * 350;
+  
+
+  // Calcular el costo total de los materiales
+  const costoMateriales = materiales.reduce(
+    (total, material) => total + material.precio,
+    0
+  );
+
+  // Determinar el factor de multiplicación según el tipo de trabajo
+  let factorMultiplicacion = 0;
+  let factorSumar = 0;
+  switch (trabajo.tipo_trabajo_id) {
+    case 1: // Reparación mecánica
+      factorMultiplicacion = 1.1;
+      break;
+    case 2: // Reparación de chapa y pintura
+      factorMultiplicacion = 1.3;
+      break;
+    case 3:
+      factorSumar = 450;
+      break;
+    default:
+      break;
+  }
+
+  // Calcular el costo total según el tipo de trabajo
+  const costoTipoTrabajo = costoMateriales * factorMultiplicacion || costoHoras + factorSumar;
+  total += costoTipoTrabajo;
+
+  // Calcular el total general
+  total += costoHoras;
+
+  return total;
+};
 
   const fetchData = async () => {
     try {
@@ -69,6 +111,7 @@ function Detalles() {
     setModalOpen(false);
     setConfirmModalOpen(false);
   };
+  
 
   const handleConfirm = async () => {
     try {
@@ -80,6 +123,8 @@ function Detalles() {
       alert("El trabajo se ha marcado como terminado con éxito");
       // setBotonesHabilitados(false);
       // localStorage.setItem(`botonesHabilitados_${id_trabajo}`, "false");
+      
+      
       window.location.reload();
     } catch (error) {
       console.error("Error al marcar como terminado:", error);
@@ -160,6 +205,7 @@ function Detalles() {
       closeModals();
     }
   };
+  
 
   return (
     <div className="bg-gray-200 overflow-y-auto">
@@ -199,6 +245,12 @@ function Detalles() {
                   {trabajo.estatus === 1 ? "Terminado" : "En proceso"}
                 </p>
               </div>
+              <div className="flex flex-col ml-[10%]">
+  <h4>Total general:</h4>
+  <p className="border-gray-300 border-2 rounded px-2 shadow-md">
+  ${totalGeneral()}
+  </p>
+</div>
             </div>
           </div>
         )}
