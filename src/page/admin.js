@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeaderAdmin from "../components/headerAdmin";
 import CardAdmin from "../components/cardAdmin";
 import Buscar from "../img/icono_buscar.png";
@@ -9,6 +9,14 @@ function Admin() {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  useEffect(() =>{
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+      window.location.replace('/');
+    };
+  },[])
 
   return (
     <>

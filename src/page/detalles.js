@@ -48,6 +48,12 @@ function Detalles() {
   };
 
   useEffect(() => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+      window.location.replace('/');
+    };
+
     fetchData();
     fetchMaterialData();
   }, []);

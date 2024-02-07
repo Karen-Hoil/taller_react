@@ -40,6 +40,12 @@ function CrearTrabajo() {
   };  
 
   useEffect(() => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+      window.location.replace('/');
+    };
+
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8082/tipoTrabajo");
