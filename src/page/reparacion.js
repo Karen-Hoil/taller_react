@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Header from "../components/navar";
 import TableWorks from "../components/TableWorks";
 import Buscar from "../img/icono_buscar.png";
@@ -14,6 +14,14 @@ function Reparacion() {
   const handleInputChange = (e) => {
     setBusquedaDescripcion(e.target.value);
   };
+
+  useEffect(() =>{
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+      window.location.replace('/');
+    };
+  })
 
   return (
     <div className="bg-gray-200 h-screen">

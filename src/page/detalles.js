@@ -14,9 +14,13 @@ function Detalles() {
   const [material, setMaterial] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [trabajoTerminado, setTrabajoTerminado] = useState(false);
+  // const [trabajoTerminado, setTrabajoTerminado] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
+  // const [estatusTrabajo, setEstatusTrabajo] = useState("");
+  // const [botonesHabilitados, setBotonesHabilitados] = useState(true);
   const [updateMessage, setUpdateMessage] = useState("");
+  // const [currentNombre, setCurrentNombre] = useState(""); // Nuevo estado para almacenar el nombre actual
+  // const [currentDescripcion, setCurrentDescripcion] = useState(""); // Nuevo estado para almacenar la descripción actual
 
   const fetchData = async () => {
     try {
@@ -25,6 +29,7 @@ function Detalles() {
       );
       console.log("Datos obtenidos:", response.data);
       setTrabajo(response.data[0] || {});
+      // setEstatusTrabajo(response.data[0]?.estado || "");
     } catch (error) {
       console.error("Error al obtener datos:", error);
     }
@@ -43,9 +48,21 @@ function Detalles() {
   };
 
   useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+    if (!isLoggedIn) {
+      window.location.replace("/");
+    }
     fetchData();
     fetchMaterialData();
   }, []);
+
+  const openEditModal = () => {
+    // Al abrir el modal, establecer el nombre y la descripción actuales en los nuevos estados
+    setNombre(trabajo.nombre || "");
+    setDescripcion(trabajo.descripcion || "");
+    setModalOpen(true);
+  };
 
   const closeModals = () => {
     setModalOpen(false);
@@ -54,11 +71,15 @@ function Detalles() {
 
   const handleConfirm = async () => {
     try {
-      // Lógica para marcar el trabajo como terminado
-      // Aquí puedes realizar cualquier acción necesaria al confirmar
-      // en este caso, simplemente mostramos un mensaje estático
+      const responseTrabajo = await axios.put(
+        `http://localhost:8082/trabajosEstatus/${id_trabajo}`
+      );
+      console.log("Respuesta del servidor (Trabajo):", responseTrabajo.data);
       setConfirmMessage("El trabajo se ha marcado como terminado");
-
+      alert("El trabajo se ha marcado como terminado con éxito");
+      // setBotonesHabilitados(false);
+      // localStorage.setItem(`botonesHabilitados_${id_trabajo}`, "false");
+      window.location.reload();
     } catch (error) {
       console.error("Error al marcar como terminado:", error);
       // Manejar el error si es necesario
@@ -67,16 +88,27 @@ function Detalles() {
     }
   };
 
-  const handleSubmit = async (e) =>{
-    
+  // useEffect(() => {
+  //   setEstatusTrabajo(trabajo.estado || " ");
+
+  //   //     // Verificar en localStorage si los botones deben estar habilitados
+  //   const estadoGuardado = localStorage.getItem(
+  //     `botonesHabilitados_${id_trabajo}`
+  //   );
+  //   if (estadoGuardado === "false") {
+  //     setBotonesHabilitados(false);
+  //   } else {
+  //     setBotonesHabilitados(true);
+  //   }
+  // }, [trabajo.estado, id_trabajo]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!nombre.trim() || !descripcion.trim() || !horas.trim() || !costo.trim() || !material.trim()) {
+
+    if (!horas.trim() || !costo.trim() || !material.trim()) {
       alert("Por favor, complete todos los campos.");
       return;
     }
-  
-    
 
     if ((!material && costo) || (material && !costo)) {
       alert(
@@ -97,8 +129,6 @@ function Detalles() {
       id: id_trabajo,
     };
 
-    
-
     try {
       const responseTrabajo = await axios.put(
         `http://localhost:8082/trabajos/${id_trabajo}`,
@@ -110,21 +140,41 @@ function Detalles() {
         "http://localhost:8082/materiales",
         materialData
       );
-      console.log(
-        "Respuesta del servidor (Material):",
-        responseMaterial.data
-      );
-
+      console.log("Respuesta del servidor (Material):", responseMaterial.data);
       // Mostrar notificación de éxito al actualizar el trabajo
       setUpdateMessage("Se actualizó el trabajo con éxito");
-
+      closeModals();
+      setNombre("");
+      setDescripcion("");
+      setHoras("");
+      setCosto("");
+      setMaterial("");
+      window.location.reload();
     } catch (error) {
-      console.error("Error al realizar la solicitud POST:", error.response.data);
+      console.error(
+        "Error al realizar la solicitud POST:",
+        error.response.data
+      );
     } finally {
       closeModals();
     }
-    
   };
+
+  const precioTotal = materiales.reduce(
+    (total, material) => total + material.precio,
+    0
+  );
+  const Horas = trabajo.horas;
+  const tipoTrabajo = trabajo.tipo_trabajo_id;
+
+  function precioFinal(){
+  if (tipoTrabajo === 1) {
+    return Horas * 350 + precioTotal * 1.1;
+  } else if (tipoTrabajo === 2) {
+    return Horas * 350 + precioTotal * 1.3;
+  } else {
+    return Horas * 350 + 450;
+  }}
 
   return (
     <div className="bg-gray-200 overflow-y-auto">
@@ -148,19 +198,26 @@ function Detalles() {
                   {trabajo.horas}
                 </p>
               </div>
-              <div className="flex flex-col ml-[20%]">
+              <div className="flex flex-col ml-[5%]">
                 <h4>Total material:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
-                  ${materiales.reduce(
+                  $
+                  {materiales.reduce(
                     (total, material) => total + material.precio,
                     0
                   )}
                 </p>
               </div>
-              <div className="flex flex-col ml-[20%]">
+              <div className="flex flex-col ml-[5%]">
                 <h4>Estatus:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
-                  {trabajo.estado === "terminado" ? "Terminado" : "En proceso"}
+                  {trabajo.estatus === 1 ? "Terminado" : "En proceso"}
+                </p>
+              </div>
+              <div className="flex flex-col ml-[5%]">
+                <h4>Total general:</h4>
+                <p className="border-gray-300 border-2 rounded px-2 shadow-md">
+                  ${precioFinal()}
                 </p>
               </div>
             </div>
@@ -222,7 +279,9 @@ function Detalles() {
               className="form-input mb-4 w-full"
               onChange={(e) => setMaterial(e.target.value)}
             />
-            <label htmlFor="editCost">Precio total de materiales adicionales:</label>
+            <label htmlFor="editCost">
+              Precio total de materiales adicionales:
+            </label>
             <div className="relative mb-2">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-700">
                 $
@@ -310,15 +369,18 @@ function Detalles() {
       )}
       <div className="mt-[7%] mb-10 ml-[43%] flex">
         <button
-          onClick={() => setModalOpen(true)}
-          className="bg-blue-800 text-white px-4 py-1 rounded w-44 mr-2"
+          onClick={openEditModal}
+          className={`bg-blue-800 text-white px-4 py-1 rounded w-44 mr-2 ${
+            trabajo.estatus === 1 ? "hidden" : ""
+          }`}
         >
           <b>Editar trabajo</b>
         </button>
         <button
           onClick={() => setConfirmModalOpen(true)}
-          className="bg-[#FF0000] text-white px-4 py-1 rounded w-44"
-          disabled={trabajo.estado === "terminado"}
+          className={`bg-[#FF0000] text-white px-4 py-1 rounded w-44 ${
+            trabajo.estatus === 1 ? "hidden" : ""
+          }`}
         >
           <b>Marcar como terminado</b>
         </button>
