@@ -14,13 +14,13 @@ function Detalles() {
   const [material, setMaterial] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [trabajoTerminado, setTrabajoTerminado] = useState(false);
+  // const [trabajoTerminado, setTrabajoTerminado] = useState(false);
   const [confirmMessage, setConfirmMessage] = useState("");
-  const [estatusTrabajo, setEstatusTrabajo] = useState("");
-  const [botonesHabilitados, setBotonesHabilitados] = useState(true);
+  // const [estatusTrabajo, setEstatusTrabajo] = useState("");
+  // const [botonesHabilitados, setBotonesHabilitados] = useState(true);
   const [updateMessage, setUpdateMessage] = useState("");
-  const [currentNombre, setCurrentNombre] = useState(""); // Nuevo estado para almacenar el nombre actual
-  const [currentDescripcion, setCurrentDescripcion] = useState(""); // Nuevo estado para almacenar la descripción actual
+  // const [currentNombre, setCurrentNombre] = useState(""); // Nuevo estado para almacenar el nombre actual
+  // const [currentDescripcion, setCurrentDescripcion] = useState(""); // Nuevo estado para almacenar la descripción actual
 
   const fetchData = async () => {
     try {
@@ -29,7 +29,7 @@ function Detalles() {
       );
       console.log("Datos obtenidos:", response.data);
       setTrabajo(response.data[0] || {});
-      setEstatusTrabajo(response.data[0]?.estado || "");
+      // setEstatusTrabajo(response.data[0]?.estado || "");
     } catch (error) {
       console.error("Error al obtener datos:", error);
     }
@@ -48,16 +48,22 @@ function Detalles() {
   };
 
   useEffect(() => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+      window.location.replace('/');
+    };
+
     fetchData();
     fetchMaterialData();
   }, []);
 
   const openEditModal = () => {
     // Al abrir el modal, establecer el nombre y la descripción actuales en los nuevos estados
-    setCurrentNombre(trabajo.nombre || "");
-    setCurrentDescripcion(trabajo.descripcion || "");
+    setNombre(trabajo.nombre || "");
+    setDescripcion(trabajo.descripcion || "");
     setModalOpen(true);
-  };
+};
 
   const closeModals = () => {
     setModalOpen(false);
@@ -72,8 +78,8 @@ function Detalles() {
       console.log("Respuesta del servidor (Trabajo):", responseTrabajo.data);
       setConfirmMessage("El trabajo se ha marcado como terminado");
       alert("El trabajo se ha marcado como terminado con éxito");
-      setBotonesHabilitados(false);
-      localStorage.setItem(`botonesHabilitados_${id_trabajo}`, "false");
+      // setBotonesHabilitados(false);
+      // localStorage.setItem(`botonesHabilitados_${id_trabajo}`, "false");
       window.location.reload();
     } catch (error) {
       console.error("Error al marcar como terminado:", error);
@@ -82,19 +88,20 @@ function Detalles() {
       closeModals();
     }
   };
-  useEffect(() => {
-    setEstatusTrabajo(trabajo.estado || " ");
+  
+  // useEffect(() => {
+  //   setEstatusTrabajo(trabajo.estado || " ");
 
-    //     // Verificar en localStorage si los botones deben estar habilitados
-    const estadoGuardado = localStorage.getItem(
-      `botonesHabilitados_${id_trabajo}`
-    );
-    if (estadoGuardado === "false") {
-      setBotonesHabilitados(false);
-    } else {
-      setBotonesHabilitados(true);
-    }
-  }, [trabajo.estado, id_trabajo]);
+  //   //     // Verificar en localStorage si los botones deben estar habilitados
+  //   const estadoGuardado = localStorage.getItem(
+  //     `botonesHabilitados_${id_trabajo}`
+  //   );
+  //   if (estadoGuardado === "false") {
+  //     setBotonesHabilitados(false);
+  //   } else {
+  //     setBotonesHabilitados(true);
+  //   }
+  // }, [trabajo.estado, id_trabajo]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -199,7 +206,7 @@ function Detalles() {
         <div className="flex-1">
           <h4>Materiales:</h4>
           <p className="max-w-[80%] h-[100%] max-h-[100%] border-gray-300 border-2 rounded px-2 shadow-md">
-            {materiales.map((materia, index) => (
+          {materiales.map((materia, index) => (
               <span key={materia.id}>
                 {materia.material}
                 {index !== materiales.length - 1 && <br />}
@@ -209,78 +216,80 @@ function Detalles() {
         </div>
       </div>
       {modalOpen && (
-  <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
-    <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-      <h2 className="text-center mb-4">Editar trabajo</h2>
-      <label htmlFor="editName">Nombre:</label>
-      <input
-        id="editName"
-        name="editName"
-        type="text"
-        required=""
-        value={nombre}
-        className="form-input mb-2 w-full"
-        onChange={(e) => setNombre(e.target.value)}
-      />
-      <label htmlFor="editDescription">Descripción:</label>
-      <textarea
-        id="editDescription"
-        name="editDescription"
-        required=""
-        value={descripcion}
-        className="form-textarea mb-4 w-full"
-        onChange={(e) => setDescripcion(e.target.value)}
-      />
-      <label htmlFor="editHours">Horas adicionales:</label>
-      <input
-        id="editHours"
-        name="editHours"
-        type="number"
-        required=""
-        value={horas}
-        className="form-input mb-2 w-full"
-        onChange={(e) => setHoras(e.target.value)}
-      />
-      <label htmlFor="editMaterial">Materiales adicionales:</label>
-      <input
-        id="editMaterial"
-        name="editMaterial"
-        type="text"
-        required=""
-        value={material}
-        className="form-input mb-4 w-full"
-        onChange={(e) => setMaterial(e.target.value)}
-      />
-      <label htmlFor="editCost">Precio total de materiales adicionales:</label>
-      <div className="relative mb-2">
-        <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-700">
-          $
-        </span>
-        <input
-          id="editCost"
-          name="editCost"
-          type="number"
-          required=""
-          value={costo}
-          className="form-input pl-7 w-full"
-          onChange={(e) => setCosto(e.target.value)}
-        />
-      </div>
-      <button
-        onClick={closeModals}
-        className="bg-[#696969] text-white px-4 py-1 rounded w-30 mr-2 mt-4"
-      >
-        <b>Cerrar</b>
-      </button>
-      <button
-        onClick={handleSubmit}
-        className="bg-[#56AA5F] text-white px-4 py-1 rounded w-30 ml-2 mt-4"
-      >
-        <b>Actualizar</b>
-      </button>
-    </div>
-  </div>
-)}
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
+          <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+            <h2 className="text-center mb-4">Editar trabajo</h2>
+            <label htmlFor="editName">Nombre del trabajo:</label>
+          <input
+            id="editName"
+            name="editName"
+            type="text"
+            required=""
+            value={nombre}
+            className="form-input mb-2 w-full"
+            onChange={(e) => setNombre(e.target.value)}
+          />
+          <label htmlFor="editDescription">Descripción:</label>
+          <textarea
+            id="editDescription"
+            name="editDescription"
+            required=""
+            value={descripcion}
+            className="form-input mb-2 w-full"
+            onChange={(e) => setDescripcion(e.target.value)}
+          />
+            <label htmlFor="editHours">Horas adicionales:</label>
+            <input
+              id="editHours"
+              name="editHours"
+              type="number"
+              required=""
+              value={horas}
+              className="form-input mb-2 w-full"
+              onChange={(e) => setHoras(e.target.value)}
+            />
+            <label htmlFor="editMaterial">Materiales adicionales:</label>
+            <input
+              id="editMaterial"
+              name="editMaterial"
+              type="text"
+              required=""
+              value={material}
+              className="form-input mb-4 w-full"
+              onChange={(e) => setMaterial(e.target.value)}
+            />
+            <label htmlFor="editCost">
+              Precio total de materiales adicionales:
+            </label>
+            <div className="relative mb-2">
+              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-700">
+                $
+              </span>
+              <input
+                id="editCost"
+                name="editCost"
+                type="number"
+                required=""
+                value={costo}
+                className="form-input pl-7 w-full"
+                onChange={(e) => setCosto(e.target.value)}
+              />
+            </div>
+            <button
+              onClick={closeModals}
+              className="bg-[#696969] text-white px-4 py-1 rounded w-30 mr-2 mt-4"
+            >
+              <b>Cerrar</b>
+            </button>
+            <button
+              onClick={handleSubmit}
+              className="bg-[#56AA5F] text-white px-4 py-1 rounded w-30 ml-2 mt-4"
+            >
+              <b>Actualizar</b>
+            </button>
+          </div>
+        </div>
+      )}
       {confirmModalOpen && (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
           <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
@@ -343,7 +352,6 @@ function Detalles() {
           className={`bg-blue-800 text-white px-4 py-1 rounded w-44 mr-2 ${
             trabajo.estatus === 1 ? "hidden" : ""
           }`}
-          disabled={!botonesHabilitados}
         >
           <b>Editar trabajo</b>
         </button>

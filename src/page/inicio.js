@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/navar";
 import TableWorks from "../components/TableWorks";
 import Buscar from "../img/icono_buscar.png";
@@ -14,6 +14,14 @@ function Inicio() {
   const handleInputChange = (e) => {
     setBusquedaDescripcion(e.target.value);
   };
+
+  useEffect(() =>{
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+      window.location.replace('/');
+    };
+  },[])
 
   return (
     <>

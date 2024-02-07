@@ -15,6 +15,14 @@ function Revision() {
     setBusquedaDescripcion(e.target.value);
   };
 
+  useEffect(() =>{
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isLoggedIn) {
+      window.location.replace('/');
+    };
+  })
+
   return (
     <>
       <Header />
