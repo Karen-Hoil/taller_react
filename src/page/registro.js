@@ -94,7 +94,9 @@ const Login = () => {
       codigo: codigo
     });
 
-    if (response.status) {
+    if (response.status ===200) {
+      alert("Registro exitoso. Ahora puedes iniciar sesión.");
+      localStorage.setItem('loggedInUserName', username);
       window.location.href = "/";
     } else {
       setEmail("");
