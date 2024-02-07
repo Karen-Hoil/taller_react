@@ -55,6 +55,7 @@ const Login = () => {
         localStorage.setItem('isLoggedIn', 'true');
         window.location.href = "/admin";
       } else {
+        localStorage.setItem('isLoggedIn', 'true');
         window.location.href = "/inicio";
       }
     } else {
