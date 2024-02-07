@@ -17,7 +17,7 @@ const Login = () => {
     if (response.data.ok) {
       setCodigo(response.data.codigo);
       console.log(codigo);
-      alert("Código generado correctamente.");
+      // alert("Código generado correctamente.");
       setCodigoGenerado(true);
     } else {
       alert("Error al generar el código.");
@@ -46,10 +46,12 @@ const Login = () => {
   const login = async (e) => {
     e.preventDefault();
 
-    if (codigo === "") {
-      alert("Por favor, genera el código primero.");
-      return;
-    }
+    generarToken()
+
+    // if (codigo === "") {
+    //   alert("Por favor, genera el código primero.");
+    //   return;
+    // }
 
     // Verificar campos vacíos
     if (email.trim() === "" || password.trim() === "" || confirmPassword.trim() === "" || username.trim() === "") {
@@ -126,7 +128,7 @@ const Login = () => {
         <label htmlFor="confirmPassword">Confirmar Contraseña:</label>
         <input type="password" id="confirmPassword" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
         {passwordErrorMessage && <p className="error-message">{passwordErrorMessage}</p>}
-        <button type="button" className="mx-auto block bg-blue-800 text-white mb-3 w-[30%] rounded p-2" onClick={generarToken} disabled={codigoGenerado}>Generar código</button>
+        {/* <button type="button" className="mx-auto block bg-blue-800 text-white mb-3 w-[30%] rounded p-2" onClick={generarToken} disabled={codigoGenerado}>Generar código</button> */}
         <button type="submit" className="login-button">Registrate</button>
       </form>
       <div className="register-link">
