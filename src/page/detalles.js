@@ -14,8 +14,13 @@ function Detalles() {
   const [material, setMaterial] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  const [estatusTrabajo, setEstatusTrabajo] = useState("");
-  const [botonesHabilitados, setBotonesHabilitados] = useState(true);
+  // const [trabajoTerminado, setTrabajoTerminado] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState("");
+  // const [estatusTrabajo, setEstatusTrabajo] = useState("");
+  // const [botonesHabilitados, setBotonesHabilitados] = useState(true);
+  const [updateMessage, setUpdateMessage] = useState("");
+  // const [currentNombre, setCurrentNombre] = useState(""); // Nuevo estado para almacenar el nombre actual
+  // const [currentDescripcion, setCurrentDescripcion] = useState(""); // Nuevo estado para almacenar la descripción actual
 
   const fetchData = async () => {
     try {
@@ -24,7 +29,7 @@ function Detalles() {
       );
       console.log("Datos obtenidos:", response.data);
       setTrabajo(response.data[0] || {});
-      setEstatusTrabajo(response.data[0]?.estado || "");
+      // setEstatusTrabajo(response.data[0]?.estado || "");
     } catch (error) {
       console.error("Error al obtener datos:", error);
     }
@@ -42,16 +47,19 @@ function Detalles() {
     }
   };
 
-  const openModal = async () => {
-    await fetchData();
-    await fetchMaterialData();
-    setModalOpen(true);
+  useEffect(() => {
+    fetchData();
+    fetchMaterialData();
+  }, []);
+
+  const openEditModal = () => {
+    // Al abrir el modal, establecer el nombre y la descripción actuales en los nuevos estados
     setNombre(trabajo.nombre || "");
     setDescripcion(trabajo.descripcion || "");
-    setHoras(trabajo.horas || "");
-  };
+    setModalOpen(true);
+};
 
-  const closeModal = () => {
+  const closeModals = () => {
     setModalOpen(false);
   };
 
@@ -65,24 +73,14 @@ function Detalles() {
 
   const handleConfirm = async () => {
     try {
-      // Lógica para marcar el trabajo como terminado
-      await axios.put(
-        `http://localhost:8082/trabajos/${id_trabajo}/marcar-terminado`
+      const responseTrabajo = await axios.put(
+        `http://localhost:8082/trabajosEstatus/${id_trabajo}`
       );
-
-      // Actualizar el estado para reflejar el cambio en el trabajo
-      setEstatusTrabajo("terminado");
-
-      // Guardar en localStorage que los botones están deshabilitados
-      localStorage.setItem(`botonesHabilitados_${id_trabajo}`, 'false');
-
-      // Obtener de nuevo los datos de materiales (si es necesario)
-      await fetchMaterialData();
-
-      // Mostrar alerta de éxito
-      alert("El trabajo se ha marcado como terminado con éxito.");
-
-      // Reiniciar la página
+      console.log("Respuesta del servidor (Trabajo):", responseTrabajo.data);
+      setConfirmMessage("El trabajo se ha marcado como terminado");
+      alert("El trabajo se ha marcado como terminado con éxito");
+      // setBotonesHabilitados(false);
+      // localStorage.setItem(`botonesHabilitados_${id_trabajo}`, "false");
       window.location.reload();
     } catch (error) {
       console.error("Error al marcar como terminado:", error);
@@ -91,26 +89,28 @@ function Detalles() {
       closeConfirmModal();
     }
   };
+  
+  // useEffect(() => {
+  //   setEstatusTrabajo(trabajo.estado || " ");
 
-  useEffect(() => {
-    fetchData();
-    fetchMaterialData();
-
-    // Verificar en localStorage si los botones deben estar habilitados
-    const estadoGuardado = localStorage.getItem(`botonesHabilitados_${id_trabajo}`);
-    if (estadoGuardado === 'false') {
-      setBotonesHabilitados(false);
-    } else {
-      setBotonesHabilitados(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    setEstatusTrabajo(trabajo.estado || " ");
-  }, [trabajo.estado]);
+  //   //     // Verificar en localStorage si los botones deben estar habilitados
+  //   const estadoGuardado = localStorage.getItem(
+  //     `botonesHabilitados_${id_trabajo}`
+  //   );
+  //   if (estadoGuardado === "false") {
+  //     setBotonesHabilitados(false);
+  //   } else {
+  //     setBotonesHabilitados(true);
+  //   }
+  // }, [trabajo.estado, id_trabajo]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!horas.trim() || !costo.trim() || !material.trim()) {
+      alert("Por favor, complete todos los campos.");
+      return;
+    }
 
     if ((!material && costo) || (material && !costo)) {
       alert(
@@ -142,12 +142,10 @@ function Detalles() {
         "http://localhost:8082/materiales",
         materialData
       );
-      console.log(
-        "Respuesta del servidor (Material):",
-        responseMaterial.data
-      );
-      alert("Se actualizó el trabajo con éxito");
-      closeModal();
+      console.log("Respuesta del servidor (Material):", responseMaterial.data);
+      // Mostrar notificación de éxito al actualizar el trabajo
+      setUpdateMessage("Se actualizó el trabajo con éxito");
+      closeModals();
       setNombre("");
       setDescripcion("");
       setHoras("");
@@ -155,7 +153,10 @@ function Detalles() {
       setMaterial("");
       window.location.reload();
     } catch (error) {
-      console.error("Error al realizar la solicitud POST:", error.response.data);
+      console.error(
+        "Error al realizar la solicitud POST:",
+        error.response.data
+      );
     } finally {
       closeModal();
     }
@@ -186,7 +187,8 @@ function Detalles() {
               <div className="flex flex-col ml-[20%]">
                 <h4>Total material:</h4>
                 <p className="border-gray-300 border-2 rounded px-2 shadow-md">
-                  ${materiales.reduce(
+                  $
+                  {materiales.reduce(
                     (total, material) => total + material.precio,
                     0
                   )}
@@ -205,16 +207,12 @@ function Detalles() {
         <div className="flex-1">
           <h4>Materiales:</h4>
           <p className="max-w-[80%] h-[100%] max-h-[100%] border-gray-300 border-2 rounded px-2 shadow-md">
-            {materiales
-              .filter((materia) => materia.material.trim() !== " ") //Filtrar materiales vacios
-              .map((materia, index) => (
-                <span key={materia.id}>
-                  {materia.material}
-                  {index !== materiales.length - 1 && materia.material.trim() !== "" && (
-                    <br />
-                  )}
-                </span>
-              ))}
+          {materiales.map((materia, index) => (
+              <span key={materia.id}>
+                {materia.material}
+                {index !== materiales.length - 1 && <br />}
+              </span>
+            ))}
           </p>
         </div>
       </div>
@@ -223,24 +221,24 @@ function Detalles() {
           <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
             <h2 className="text-center mb-4">Editar trabajo</h2>
             <label htmlFor="editName">Nombre del trabajo:</label>
-            <input
-              id="editName"
-              name="editName"
-              type="text"
-              required=""
-              value={nombre}
-              className="form-input mb-2 w-full"
-              onChange={(e) => setNombre(e.target.value)}
-            />
-            <label htmlFor="editDescription">Descripción:</label>
-            <textarea
-              id="editDescription"
-              name="editDescription"
-              required=""
-              value={descripcion}
-              className="form-input mb-2 w-full"
-              onChange={(e) => setDescripcion(e.target.value)}
-            />
+          <input
+            id="editName"
+            name="editName"
+            type="text"
+            required=""
+            value={nombre}
+            className="form-input mb-2 w-full"
+            onChange={(e) => setNombre(e.target.value)}
+          />
+          <label htmlFor="editDescription">Descripción:</label>
+          <textarea
+            id="editDescription"
+            name="editDescription"
+            required=""
+            value={descripcion}
+            className="form-input mb-2 w-full"
+            onChange={(e) => setDescripcion(e.target.value)}
+          />
             <label htmlFor="editHours">Horas adicionales:</label>
             <input
               id="editHours"
@@ -261,7 +259,9 @@ function Detalles() {
               className="form-input mb-4 w-full"
               onChange={(e) => setMaterial(e.target.value)}
             />
-            <label htmlFor="editCost">Precio total de materiales adicionales:</label>
+            <label htmlFor="editCost">
+              Precio total de materiales adicionales:
+            </label>
             <div className="relative mb-2">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-700">
                 $
@@ -317,15 +317,18 @@ function Detalles() {
       )}
       <div className="mt-[7%] mb-10 ml-[43%] flex">
         <button
-          onClick={openModal}
-          className={`bg-blue-800 text-white px-4 py-1 rounded w-44 mr-2 ${botonesHabilitados ? '' : 'hidden'}`}
+          onClick={openEditModal}
+          className={`bg-blue-800 text-white px-4 py-1 rounded w-44 mr-2 ${
+            trabajo.estatus === 1 ? "hidden" : ""
+          }`}
         >
           <b>Editar trabajo</b>
         </button>
         <button
-          onClick={openConfirmModal}
-          className={`bg-[#FF0000] text-white px-4 py-1 rounded w-44 ${botonesHabilitados ? '' : 'hidden'}`}
-          disabled={trabajo.estado === "terminado"}
+          onClick={() => setConfirmModalOpen(true)}
+          className={`bg-[#FF0000] text-white px-4 py-1 rounded w-44 ${
+            trabajo.estatus === 1 ? "hidden" : ""
+          }`}
         >
           <b>Marcar como terminado</b>
         </button>
