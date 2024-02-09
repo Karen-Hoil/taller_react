@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
 
-export default function TableWorks({ filtroEstado, busquedaDescripcion }) {
+export default function TableWorks({ filtroEstado, busquedaDescripcion, filtro }) {
   const [trabajos, setTrabajos] = useState([]);
+  const idUsuario = localStorage.getItem('usuarioId')
+  const [trabajosUsuario, setTrabajosUsuario] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,7 +18,18 @@ export default function TableWorks({ filtroEstado, busquedaDescripcion }) {
       }
     };
 
+    const fetchDataUsuario = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8082/trabajoUsuario/${idUsuario}`);
+        console.log("Datos obtenidos:", response.data);
+        setTrabajosUsuario(response.data);
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+      }
+    };
+
     fetchData();
+    fetchDataUsuario();
   }, []);
 
   const columnaData = [
@@ -43,9 +56,11 @@ export default function TableWorks({ filtroEstado, busquedaDescripcion }) {
   };
 
   const filaTable = (datos) => {
+    const trabajosMostrar = filtro === "1" ? trabajosUsuario : trabajos;
+
     const trabajosFiltrados = filtroEstado === "todo"
-      ? trabajos
-      : trabajos.filter(trabajo => trabajo.estatus === (filtroEstado === "en-proceso" ? 0 : 1));
+      ? trabajosMostrar
+      : trabajosMostrar.filter(trabajo => trabajo.estatus === (filtroEstado === "en-proceso" ? 0 : 1));
 
     const trabajosFiltradosDescripcion = busquedaDescripcion
       ? trabajosFiltrados.filter(trabajo => trabajo.descripcion.toLowerCase().includes(busquedaDescripcion.toLowerCase()))

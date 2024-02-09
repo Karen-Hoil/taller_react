@@ -16,9 +16,8 @@ const Login = () => {
     const response = await axios.post(`http://localhost:8082/api/auth/login/maximoquinteroescobar8@gmail.com/code`);
     if (response.data.ok) {
       setCodigo(response.data.codigo);
-      console.log(codigo);
-      alert("Código generado correctamente.");
       setCodigoGenerado(true);
+      alert('Token generado con exito')
     } else {
       alert("Error al generar el código.");
     }
@@ -45,11 +44,6 @@ const Login = () => {
 
   const login = async (e) => {
     e.preventDefault();
-
-    if (codigo === "") {
-      alert("Por favor, genera el código primero.");
-      return;
-    }
 
     // Verificar campos vacíos
     if (email.trim() === "" || password.trim() === "" || confirmPassword.trim() === "" || username.trim() === "") {

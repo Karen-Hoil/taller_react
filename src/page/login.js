@@ -57,6 +57,7 @@ const Login = () => {
         window.location.href = "/admin";
       } else {
         localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('usuarioId', response.data.id);
         window.location.href = "/inicio";
       }
     } else {
