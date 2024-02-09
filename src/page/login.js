@@ -7,32 +7,51 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [codigo, setCodigo] = useState('');
+  const [codigo, setCodigo] = useState("");
+  const [userLocation, setUserLocation] = useState(null);
+  let pais;
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
+  
   const passwordType = showPassword ? "text" : "password";
 
   const isValidPassword = (inputPassword) => {
     const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
     return regex.test(inputPassword);
-  }
+  };
 
   const isAlphanumeric = (str) => /^[a-zA-Z0-9]+$/.test(str);
 
+  // const getLocation = () => {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition((position) => {
+  //       setUserLocation({
+  //         latitude: position.coords.latitude,
+  //         longitude: position.coords.longitude,
+  //       });
+  //     });
+  //   } else {
+  //     alert("La geolocalización no es compatible con este navegador.");
+  //   }
+  // };
+
   const login = async (e) => {
     e.preventDefault();
+    const responseIP = await axios.get(
+      "https://api64.ipify.org?format=json"
+    );
+    const userIP = responseIP.data.ip;
+    console.log("----> IP: " + userIP);
 
-    // Verificar la dirección IP antes de iniciar sesión
-    const userIPAddress = await axios.get("https://api.ipify.org?format=json").then(response => response.data.ip);
-    if (userIPAddress !== "192.168.3.207") {
-      alert("No estás autorizado para acceder desde esta dirección IP.");
-      return;
-    }
+    const responseLocation = await axios.get(
+      `https://ipinfo.io/${userIP}?token=0bc764109e1c08`
+    );
+    const { country } = responseLocation.data;
+   
 
-    if (email.trim() === "" || password.trim() === "" || codigo.trim() === '') {
+    if (email.trim() === "" || password.trim() === "" || codigo.trim() === "") {
       alert("Por favor, completa todos los campos.");
       return;
     }
@@ -47,33 +66,51 @@ const Login = () => {
       return;
     }
 
+    // if (!userLocation) {
+    //   alert("No se pudo obtener la ubicación. Asegúrate de habilitar la geolocalización en tu navegador.");
+    //   return;
+    // }
+
     const response = await axios.post("http://localhost:8082/login", {
       correo: email,
       contraseña: password,
       codigo: codigo,
+      // ubicacion: userLocation,
     });
 
     if (response.data.status) {
       console.log(response.data);
-      localStorage.setItem('loggedInUserName', response.data.nombre); // Guarda el nombre del usuario en el localStorage
+      localStorage.setItem("loggedInUserName", response.data.nombre); 
       if (response.data.tipo_usuario === 1) {
-        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem("isLoggedIn", "true");
         window.location.href = "/admin";
+      
       } else {
-        localStorage.setItem('isLoggedIn', 'true');
+        console.log("----> country: " + country);
+
+        if(country==="MX"){
+          localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("usuarioId", response.data.id);
         window.location.href = "/inicio";
+        }
+        else{
+          console.log(pais)
+          alert("Acceso no permitido por la ubicacion del pais")
+        }
+        
       }
     } else {
       setEmail("");
       setPassword("");
-      setCodigo('')
+      setCodigo("");
       alert("Prueba con otro correo o contraseña");
     }
   };
 
-  useEffect(() =>{
-    localStorage.setItem('isLoggedIn', 'false');
-  },[])
+  useEffect(() => {
+    localStorage.setItem("isLoggedIn", "false");
+    // getLocation(); // Obtener la ubicación al cargar el componente
+  }, []);
 
   return (
     <div className="login-container">
@@ -109,9 +146,9 @@ const Login = () => {
             {showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
           </button>
         </div>
-        <label htmlFor="email">Codigo:</label>
+        <label htmlFor="codigo">Código:</label>
         <input
-          type="codigo"
+          type="text"
           id="codigo"
           name="codigo"
           value={codigo}

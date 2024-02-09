@@ -54,7 +54,7 @@ function Inicio() {
           </select>
         </div>
       </div>
-      <TableWorks filtroEstado={filtroEstado} busquedaDescripcion={busquedaDescripcion} />
+      <TableWorks filtroEstado={filtroEstado} busquedaDescripcion={busquedaDescripcion} filtro="1" />
     </>
   );
 }

@@ -9,6 +9,7 @@ function CrearTrabajo() {
   const [descripcion, setDescripcion] = useState("");
   const [tipoTrabajo, setTipoTrabajo] = useState([]);
   const [selectedTipoTrabajo, setSelectedTipoTrabajo] = useState("");
+  const idUsuario = localStorage.getItem('usuarioId')
 
   Modal.setAppElement("#root");
 
@@ -24,6 +25,7 @@ function CrearTrabajo() {
       nombre: nombre,
       descripcion: descripcion,
       trabajo: selectedTipoTrabajo,
+      idUsuario: idUsuario,
     };
   
     try {
