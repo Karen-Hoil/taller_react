@@ -7,34 +7,38 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [codigo, setCodigo] = useState('');
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const passwordType = showPassword ? "text" : "password";
-  const [codigo, setCodigo] = useState('');
 
   const isValidPassword = (inputPassword) => {
-  const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
+    const regex = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/;
     return regex.test(inputPassword);
   }
-  const isAlphanumeric = (str) => /^[a-zA-Z0-9]+$/.test(str);
 
+  const isAlphanumeric = (str) => /^[a-zA-Z0-9]+$/.test(str);
 
   const login = async (e) => {
     e.preventDefault();
+
+    // Verificar la dirección IP antes de iniciar sesión
+    const userIPAddress = await axios.get("https://api.ipify.org?format=json").then(response => response.data.ip);
+    if (userIPAddress !== "192.168.3.207") {
+      alert("No estás autorizado para acceder desde esta dirección IP.");
+      return;
+    }
 
     if (email.trim() === "" || password.trim() === "" || codigo.trim() === '') {
       alert("Por favor, completa todos los campos.");
       return;
     }
 
-    
     if (!isValidPassword(password)) {
-      alert("La contraseña no debe contener caracteres especiales ni la letra 'ñ'.");}
-    if (!email.trim() || !password.trim()) {
-      alert("Por favor, completa todos los campos");
+      alert("La contraseña no debe contener caracteres especiales ni la letra 'ñ'.");
       return;
     }
 
@@ -125,6 +129,5 @@ const Login = () => {
     </div>
   );
 };
-
 
 export default Login;

@@ -46,11 +46,11 @@ export default function TableWorks({ filtroEstado, busquedaDescripcion }) {
     const trabajosFiltrados = filtroEstado === "todo"
       ? trabajos
       : trabajos.filter(trabajo => trabajo.estatus === (filtroEstado === "en-proceso" ? 0 : 1));
-
+  
     const trabajosFiltradosDescripcion = busquedaDescripcion
-      ? trabajosFiltrados.filter(trabajo => trabajo.descripcion.toLowerCase().includes(busquedaDescripcion.toLowerCase()))
+      ? trabajosFiltrados.filter(trabajo => trabajo.descripcion && trabajo.descripcion.toLowerCase().includes(busquedaDescripcion.toLowerCase()))
       : trabajosFiltrados;
-
+  
     return trabajosFiltradosDescripcion.map((elementos, indice) => (
       <tr key={indice} className={indice % 2 === 0 ? "bg-gray-100 text-center" : "bg-[#D9D9D9]  text-center"}>
         <td>{elementos.nombre}</td>
